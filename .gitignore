@@ -13,6 +13,7 @@ Temp/
 /[Uu]ser[Ss]ettings/
 *.log
 *.meta
+*.mat.meta
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
