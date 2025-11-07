@@ -6534,8 +6534,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4757723854870162, guid: 6d513e3e97508a3429bc5eac2b8b7145, type: 3}
   m_PrefabInstance: {fileID: 699350015}
   m_PrefabAsset: {fileID: 0}
-<<<<<<< Updated upstream
-=======
 --- !u!1 &713340893
 GameObject:
   m_ObjectHideFlags: 0
@@ -6688,7 +6686,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1477330340642922, guid: 7218b9728928b894eb1799b26af67733, type: 3}
   m_PrefabInstance: {fileID: 1588792348}
   m_PrefabAsset: {fileID: 0}
->>>>>>> Stashed changes
 --- !u!1001 &720083714
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8510,8 +8507,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4958332315337656, guid: 5a652a60006d6ec46980e623412396f9, type: 3}
   m_PrefabInstance: {fileID: 885989075}
   m_PrefabAsset: {fileID: 0}
-<<<<<<< Updated upstream
-=======
 --- !u!1 &900880209
 GameObject:
   m_ObjectHideFlags: 0
@@ -8640,7 +8635,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.118799396, y: 4.4218807, z: 5.335838}
   m_Center: {x: 0.042912297, y: 2.187048, z: 0.39312896}
->>>>>>> Stashed changes
 --- !u!1001 &908766948
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10723,8 +10717,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4800902508760328, guid: 2d0d657c1182735489e24a5ce302b99c, type: 3}
   m_PrefabInstance: {fileID: 1072377528}
   m_PrefabAsset: {fileID: 0}
-<<<<<<< Updated upstream
-=======
 --- !u!1 &1073737562
 GameObject:
   m_ObjectHideFlags: 0
@@ -10819,7 +10811,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.118799366, y: 4.4218807, z: 5.335836}
   m_Center: {x: 0.042912286, y: 2.187048, z: 0.39312407}
->>>>>>> Stashed changes
 --- !u!1001 &1104318622
 PrefabInstance:
   m_ObjectHideFlags: 0
