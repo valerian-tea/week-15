@@ -28,14 +28,11 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         MyInput();
-
-        rb.linearDamping = groundDrag;
-
-    }
-
-    private void FixedUpdate()
-    {
         MovePlayer();
+        SpeedControl();
+
+        // rb.linearDamping = groundDrag;
+
     }
 
     private void MyInput()
@@ -45,19 +42,15 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void MovePlayer()
-    
+
     {
-        bool shiftHeld = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
-        
-        if (shiftHeld)
-        {
-            moveSpeed = 0f; // Increased speed when Shift is held
-        } else {
-            moveSpeed = 6f; // Normal speed
-        }
-       
+
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
         rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+        if (horizontalInput == 0 && verticalInput == 0 && grounded)
+        {
+            rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
+        }
     }
 
     private void SpeedControl()
