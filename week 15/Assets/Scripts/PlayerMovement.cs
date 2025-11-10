@@ -47,10 +47,6 @@ public class PlayerMovement : MonoBehaviour
 
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
         rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
-        if (horizontalInput == 0 && verticalInput == 0 && grounded)
-        {
-            rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
-        }
     }
 
     private void SpeedControl()
@@ -62,5 +58,6 @@ public class PlayerMovement : MonoBehaviour
             Vector3 limitedVel = flatVel.normalized * moveSpeed;
             rb.linearVelocity = new Vector3(limitedVel.x, rb.linearVelocity.y, limitedVel.z);
         }
+
     }
 }
