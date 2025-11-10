@@ -24,7 +24,6 @@ public class UIManager : MonoBehaviour
 
             if (isInventoryVisible) // Hide inventory
             {
-                Debug.Log("Hiding Inventory Panel");
                 cg.alpha = 0f;
                 cg.interactable = false;
                 cg.blocksRaycasts = false;
@@ -33,7 +32,6 @@ public class UIManager : MonoBehaviour
             }
             else // Show inventory
             {
-                Debug.Log("Showing Inventory Panel");
                 cg.alpha = 1f;
                 cg.interactable = true;
                 cg.blocksRaycasts = true;
