@@ -28,17 +28,21 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         MyInput();
-        MovePlayer();
         SpeedControl();
+    }
 
-        // rb.linearDamping = groundDrag;
+    void FixedUpdate()
+    {
+        MovePlayer();
+
+        rb.linearDamping = groundDrag;
 
     }
 
     private void MyInput()
     {
-        horizontalInput = Input.GetAxis("Horizontal");
-        verticalInput = Input.GetAxis("Vertical");
+        horizontalInput = Input.GetAxisRaw("Horizontal");
+        verticalInput = Input.GetAxisRaw("Vertical");
     }
 
     private void MovePlayer()
@@ -46,7 +50,7 @@ public class PlayerMovement : MonoBehaviour
     {
 
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
-        rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+        rb.AddForce(moveDirection.normalized * moveSpeed * 5f, ForceMode.Force);
     }
 
     private void SpeedControl()
