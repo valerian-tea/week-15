@@ -6782,7 +6782,7 @@ GameObject:
   - component: {fileID: 726420511}
   - component: {fileID: 726420513}
   - component: {fileID: 726420512}
-  - component: {fileID: 726420514}
+  - component: {fileID: 726420515}
   m_Layer: 5
   m_Name: DialogueBox
   m_TagString: Untagged
@@ -6848,7 +6848,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 726420510}
   m_CullTransparentMesh: 1
---- !u!114 &726420514
+--- !u!114 &726420515
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6857,14 +6857,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 726420510}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e4a894674d5846b1bea3606a10f542e, type: 3}
+  m_Script: {fileID: 11500000, guid: 1dee041e343b84615987eb383595634f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Dialogue
   textComponent: {fileID: 1492601231}
   lines:
-  - How are you, Miss Casey?
-  - Can't complain, how about yourself?
-  - Eh, just another Monday. Shouldn't you get over to your homeroom?
+  - Hello! How are you?
+  - Good, how are you?
+  - Shouldn't you get to class?
   typingDelay: 0.05
 --- !u!1001 &732581007
 PrefabInstance:
@@ -10509,11 +10509,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 963551831}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db74603fbfc594825aecfd3fba02a8e2, type: 3}
+  m_Script: {fileID: 11500000, guid: f6d80bb51ff4a42eaa3d6d7d25a480a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  moveSpeed: 3
-  groundDrag: 0
+  moveSpeed: 5
+  groundDrag: 3
   playerHeight: 1
   whatIsGround:
     serializedVersion: 2
@@ -16806,7 +16806,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1470251478}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1301a70f815894bf9a47aae2976948b1, type: 3}
+  m_Script: {fileID: 11500000, guid: f342adaec51d64a44a1160028f383b2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MoveCamera
   cameraPosition: {fileID: 651516750}
@@ -20525,9 +20525,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1793018982}
-  - component: {fileID: 1793018983}
   - component: {fileID: 1793018984}
   - component: {fileID: 1793018985}
+  - component: {fileID: 1793018986}
   m_Layer: 0
   m_Name: PlayerCam
   m_TagString: Player
@@ -20550,21 +20550,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1470251479}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1793018983
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1793018981}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c575703e7fa2b479aa210b8e88b67c87, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerCamera
-  sensX: 600
-  sensY: 400
-  orientation: {fileID: 256154327}
 --- !u!20 &1793018984
 Camera:
   m_ObjectHideFlags: 0
@@ -20624,6 +20609,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1793018981}
   m_CullTransparentMesh: 1
+--- !u!114 &1793018986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1793018981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 611d3bd69189040878655ef72cf1a4d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerCamera
+  sensX: 600
+  sensY: 400
+  orientation: {fileID: 256154327}
 --- !u!1 &1801291120 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1477330340642922, guid: 7218b9728928b894eb1799b26af67733, type: 3}
