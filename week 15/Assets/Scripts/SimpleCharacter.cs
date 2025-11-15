@@ -1,6 +1,7 @@
 #nullable enable
-
-namespace Yarn.Unity.Samples
+using Yarn.Unity;
+using Yarn.Unity.Samples;
+namespace MyGame.Characters
 {
     using UnityEngine;
     using System.Threading;
