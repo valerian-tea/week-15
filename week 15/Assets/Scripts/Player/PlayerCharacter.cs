@@ -1,9 +1,10 @@
+// using System.Diagnostics;
 using UnityEngine;
 using Yarn.Unity.Samples;
 
 namespace MyGame.Characters
 {
-    public class PlayerCharacter : SimpleCharacter
+    public class PlayerCharacter : BaseCharacter
     {
         Rigidbody rb;
         [Header("Movement")]
@@ -18,13 +19,27 @@ namespace MyGame.Characters
         {
             rb = GetComponent<Rigidbody>();
             rb.freezeRotation = true;
+            Debug.Log("Awake Player");
+            Mode = CharacterMode.PlayerControlledMovement;
+            SetupAnimation();
+            SetupInteraction();
         }
+
+        // protected void Awake()
+        // {
+        //     Debug.Log("Awake Player");
+        //     Mode = CharacterMode.PlayerControlledMovement;
+        //     SetupAnimation();
+        //     SetupInteraction();
+        // }
 
         // Update is called once per frame
         private void Update()
         {
             MyInput();
             UpdateMovement();
+            SetupAnimation();
+            UpdateInteraction();
 
         }
 

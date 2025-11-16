@@ -3479,7 +3479,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2148436417722125083, guid: 64d4aee0be836422ebc2c5aaf352a02d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.13
       objectReference: {fileID: 0}
     - target: {fileID: 2148436417722125083, guid: 64d4aee0be836422ebc2c5aaf352a02d, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3487,7 +3487,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2148436417722125083, guid: 64d4aee0be836422ebc2c5aaf352a02d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.574961
+      value: -3.65
       objectReference: {fileID: 0}
     - target: {fileID: 2148436417722125083, guid: 64d4aee0be836422ebc2c5aaf352a02d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3527,7 +3527,7 @@ PrefabInstance:
       objectReference: {fileID: 1882244118}
     - target: {fileID: 2578865976144883198, guid: 64d4aee0be836422ebc2c5aaf352a02d, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2578865976144883198, guid: 64d4aee0be836422ebc2c5aaf352a02d, type: 3}
       propertyPath: dialogueRunner
@@ -3545,8 +3545,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Explanation Character
       objectReference: {fileID: 0}
+    - target: {fileID: 3245717818505251307, guid: 64d4aee0be836422ebc2c5aaf352a02d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2214779348738468375, guid: 64d4aee0be836422ebc2c5aaf352a02d, type: 3}
+    - {fileID: 2578865976144883198, guid: 64d4aee0be836422ebc2c5aaf352a02d, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 2148436417722125083, guid: 64d4aee0be836422ebc2c5aaf352a02d, type: 3}
@@ -3558,7 +3563,7 @@ PrefabInstance:
       addedObject: {fileID: 897200056}
     - targetCorrespondingSourceObject: {fileID: 3245717818505251307, guid: 64d4aee0be836422ebc2c5aaf352a02d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 897200061}
+      addedObject: {fileID: 897200066}
   m_SourcePrefab: {fileID: 100100000, guid: 64d4aee0be836422ebc2c5aaf352a02d, type: 3}
 --- !u!4 &391042938 stripped
 Transform:
@@ -6825,7 +6830,7 @@ Transform:
   m_GameObject: {fileID: 713340893}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 60.55, y: 1.08, z: -2.49}
+  m_LocalPosition: {x: 60.55, y: 1.08, z: -15.91}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8506,6 +8511,7 @@ GameObject:
   - component: {fileID: 823649349}
   - component: {fileID: 823649348}
   - component: {fileID: 823649351}
+  - component: {fileID: 823649352}
   - component: {fileID: 823649353}
   m_Layer: 0
   m_Name: Parrot
@@ -8631,7 +8637,7 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: -0.000036239624}
---- !u!114 &823649353
+--- !u!114 &823649352
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8640,9 +8646,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 823649346}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 929094aa2c6b3479aacd4617d5e3c0ce, type: 3}
+  m_Script: {fileID: 11500000, guid: e7798f8b7f7084a0f948cb5343dffbf7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: YarnSpinner.Unity.Samples::Yarn.Unity.Samples.DialogueInteractable
+  m_EditorClassIdentifier: Assembly-CSharp::MyGame.Characters.DialogueInteractable
   onActiveChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -8654,9 +8660,59 @@ MonoBehaviour:
       m_Calls: []
   dialogue:
     project: {fileID: 7545569452688597077, guid: 316fedb72e8c041a49a0f1db3eb267d5, type: 3}
-    nodeName: Yap
+    nodeName: Gossip
   dialogueRunner: {fileID: 1635753613}
   turnsToInteractor: 1
+--- !u!114 &823649353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 823649346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03614eaf441e94f799cf2d3ae4041434, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MyGame.Characters.NPCMovement
+  isPlayerControlled: 0
+  followPath: {fileID: 0}
+  interactInput:
+    inputActionReference: {fileID: 0}
+    legacyInputAxis: Jump
+  lookTarget: {fileID: 963551835}
+  animator: {fileID: 0}
+  facialExpressions:
+    m_keys: []
+    m_values: []
+  facialExpressionsLayer: Face
+  deathMouthTexture: {fileID: 0}
+  meanBlinkTime: 2
+  blinkTimeVariance: 0.5
+  speedParameter: Speed
+  sideTiltParameter: Side Tilt
+  forwardTiltParameter: Forward Tilt
+  turnParameter: Turn
+  blinkTriggerName: Blink
+  cycleOffsetParameter: Cycle Offset
+  aliveParameter: Alive
+  interactionRadius: 4
+  offset: {x: 0, y: 0, z: 0}
+  onInteracting:
+    m_PersistentCalls:
+      m_Calls: []
+  speed: 3
+  gravity: 10
+  turnSpeed: 500
+  acceleration: 0.5
+  deceleration: 0.1
+  outOfBoundsYPosition: -5
+  pathDestinationTolerance: 0.1
+  movementInput:
+    inputActionReference: {fileID: 0}
+    legacyInputHorizontalAxis: Horizontal
+    legacyInputVerticalAxis: Vertical
+  CurrentSpeedFactor: 0
 --- !u!1001 &828409196
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9599,24 +9655,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03614eaf441e94f799cf2d3ae4041434, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MyGame.Characters.NPCMovement
-  lookTarget: {fileID: 1330945541}
   isPlayerControlled: 0
-  speed: 0
-  gravity: 10
-  turnSpeed: 3
-  acceleration: 0.5
-  deceleration: 0.1
-  outOfBoundsYPosition: -5
   followPath: {fileID: 0}
-  pathDestinationTolerance: 0.1
-  movementInput:
-    inputActionReference: {fileID: 0}
-    legacyInputHorizontalAxis: Horizontal
-    legacyInputVerticalAxis: Vertical
   interactInput:
     inputActionReference: {fileID: 0}
     legacyInputAxis: Jump
-  CurrentSpeedFactor: 0
+  lookTarget: {fileID: 1330945541}
   animator: {fileID: 391042939}
   facialExpressions:
     m_keys: []
@@ -9632,12 +9676,24 @@ MonoBehaviour:
   blinkTriggerName: Blink
   cycleOffsetParameter: Cycle Offset
   aliveParameter: Alive
-  interactionRadius: 1
-  offset: {x: 0, y: 0, z: 0}
+  interactionRadius: 3
+  offset: {x: 0, y: 0, z: 0.3}
   onInteracting:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &897200061
+  speed: 3
+  gravity: 10
+  turnSpeed: 500
+  acceleration: 0.5
+  deceleration: 0.1
+  outOfBoundsYPosition: -5
+  pathDestinationTolerance: 0.1
+  movementInput:
+    inputActionReference: {fileID: 0}
+    legacyInputHorizontalAxis: Horizontal
+    legacyInputVerticalAxis: Vertical
+  CurrentSpeedFactor: 0
+--- !u!114 &897200066
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10873,8 +10929,8 @@ GameObject:
   m_Component:
   - component: {fileID: 963551835}
   - component: {fileID: 963551836}
-  - component: {fileID: 963551837}
   - component: {fileID: 963551838}
+  - component: {fileID: 963551839}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -10927,36 +10983,6 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!114 &963551837
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 963551831}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6d80bb51ff4a42eaa3d6d7d25a480a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  moveSpeed: 5
-  groundDrag: 3
-  playerHeight: 1
-  whatIsGround:
-    serializedVersion: 2
-    m_Bits: 1024
-  isPlayerControlled: 0
-  interactionRadius: 1
-  offset: {x: 0, y: 0, z: 0}
-  onInteracting:
-    m_PersistentCalls:
-      m_Calls: []
-  followPath: {fileID: 0}
-  interactInput:
-    inputActionReference: {fileID: 0}
-    legacyInputAxis: Jump
-  lookTarget: {fileID: 0}
-  orientation: {fileID: 256154327}
 --- !u!114 &963551838
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10969,9 +10995,59 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d6073f65b518411894dca338c2269b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MyGame.Characters.PlayerCharacter
+  isPlayerControlled: 1
+  followPath: {fileID: 0}
+  interactInput:
+    inputActionReference: {fileID: 0}
+    legacyInputAxis: Jump
   lookTarget: {fileID: 0}
+  animator: {fileID: 0}
+  facialExpressions:
+    m_keys: []
+    m_values: []
+  facialExpressionsLayer: Face
+  deathMouthTexture: {fileID: 0}
+  meanBlinkTime: 2
+  blinkTimeVariance: 0.5
+  speedParameter: Speed
+  sideTiltParameter: Side Tilt
+  forwardTiltParameter: Forward Tilt
+  turnParameter: Turn
+  blinkTriggerName: Blink
+  cycleOffsetParameter: Cycle Offset
+  aliveParameter: Alive
+  interactionRadius: 4
+  offset: {x: 0, y: 0, z: 0}
+  onInteracting:
+    m_PersistentCalls:
+      m_Calls: []
   moveSpeed: 4
   orientation: {fileID: 256154327}
+--- !u!143 &963551839
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963551831}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Height: 2
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &967648250
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16686,6 +16762,7 @@ GameObject:
   - component: {fileID: 1387936170}
   - component: {fileID: 1387936167}
   - component: {fileID: 1387936171}
+  - component: {fileID: 1387936172}
   m_Layer: 0
   m_Name: Grumpy
   m_TagString: Player
@@ -16819,9 +16896,59 @@ MonoBehaviour:
   m_GameObject: {fileID: 1387936165}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 929094aa2c6b3479aacd4617d5e3c0ce, type: 3}
+  m_Script: {fileID: 11500000, guid: 03614eaf441e94f799cf2d3ae4041434, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: YarnSpinner.Unity.Samples::Yarn.Unity.Samples.DialogueInteractable
+  m_EditorClassIdentifier: Assembly-CSharp::MyGame.Characters.NPCMovement
+  isPlayerControlled: 0
+  followPath: {fileID: 0}
+  interactInput:
+    inputActionReference: {fileID: 0}
+    legacyInputAxis: Jump
+  lookTarget: {fileID: 0}
+  animator: {fileID: 0}
+  facialExpressions:
+    m_keys: []
+    m_values: []
+  facialExpressionsLayer: Face
+  deathMouthTexture: {fileID: 0}
+  meanBlinkTime: 2
+  blinkTimeVariance: 0.5
+  speedParameter: Speed
+  sideTiltParameter: Side Tilt
+  forwardTiltParameter: Forward Tilt
+  turnParameter: Turn
+  blinkTriggerName: Blink
+  cycleOffsetParameter: Cycle Offset
+  aliveParameter: Alive
+  interactionRadius: 4
+  offset: {x: 0, y: 0, z: 0}
+  onInteracting:
+    m_PersistentCalls:
+      m_Calls: []
+  speed: 0
+  gravity: 10
+  turnSpeed: 0
+  acceleration: 0.5
+  deceleration: 0.1
+  outOfBoundsYPosition: -5
+  pathDestinationTolerance: 0.1
+  movementInput:
+    inputActionReference: {fileID: 0}
+    legacyInputHorizontalAxis: Horizontal
+    legacyInputVerticalAxis: Vertical
+  CurrentSpeedFactor: 0
+--- !u!114 &1387936172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1387936165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7798f8b7f7084a0f948cb5343dffbf7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MyGame.Characters.DialogueInteractable
   onActiveChanged:
     m_PersistentCalls:
       m_Calls: []

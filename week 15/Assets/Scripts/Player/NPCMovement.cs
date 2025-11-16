@@ -1,5 +1,5 @@
 #nullable enable
-using UnityEngine;
+// using System.Diagnostics;
 using Yarn.Unity;
 using Yarn.Unity.Samples;
 namespace MyGame.Characters
@@ -11,22 +11,8 @@ namespace MyGame.Characters
     using UnityEngine.Events;
     using System.Threading.Tasks;
 
-    public class NPCMovement : SimpleCharacter
+    public class NPCMovement : BaseCharacter
     {
-        public enum CharacterMode
-        {
-            PlayerControlledMovement,
-            ExternallyControlledMovement,
-            PathMovement,
-            Interact,
-        }
-
-        public CharacterMode Mode { get; private set; }
-
-        public bool CanInteract => Mode == CharacterMode.PlayerControlledMovement;
-        public bool HasPath => followPath != null;
-
-        [SerializeField] bool isPlayerControlled;
 
         #region Movement Variables
 
@@ -47,17 +33,11 @@ namespace MyGame.Characters
         [SerializeField] float outOfBoundsYPosition = -5;
 
         [HideIf(nameof(isPlayerControlled))]
-        [SerializeField] SimplePath? followPath;
-        [HideIf(nameof(isPlayerControlled))]
         [SerializeField] float pathDestinationTolerance = 0.1f;
 
         [Group("Movement")]
         [ShowIf(nameof(isPlayerControlled))]
         [SerializeField] InputAxisVector2 movementInput = new();
-
-        [Group("Movement")]
-        [ShowIf(nameof(isPlayerControlled))]
-        [SerializeField] InputAxisButton interactInput = new();
 
         private int currentDestinationPathIndex = -1;
         private float remainingPathWaitTime = 0f;
@@ -70,327 +50,7 @@ namespace MyGame.Characters
         private float lastFrameSpeedChange = 0f;
         private Vector3 lastFrameWorldPosition;
 
-        private CharacterController? characterController;
-
         private Vector3 lastGroundedPosition;
-
-        #endregion
-
-        #region Animation Variables
-        [Group("Animation")]
-        [SerializeField] private Animator? animator;
-        [Group("Animation")]
-        [SerializeField] SerializableDictionary<string, string> facialExpressions = new();
-        [Group("Animation")]
-        [SerializeField] string facialExpressionsLayer = "Face";
-        private int facialExpressionsLayerID = 0;
-
-        [SerializeField] Texture2D? deathMouthTexture;
-
-        [Group("Animation")]
-        [Header("Blinking")]
-        [SerializeField] float meanBlinkTime = 2f;
-        [Group("Animation")]
-        [SerializeField] float blinkTimeVariance = 0.5f;
-
-        [Group("Animation Parameters", true)]
-        [AnimationParameter(nameof(animator), AnimatorControllerParameterType.Float)]
-        [SerializeField] private string speedParameter = "Speed";
-        [Group("Animation Parameters", true)]
-        [AnimationParameter(nameof(animator), AnimatorControllerParameterType.Float)]
-        [SerializeField] string sideTiltParameter = "Side Tilt";
-        [Group("Animation Parameters", true)]
-        [AnimationParameter(nameof(animator), AnimatorControllerParameterType.Float)]
-        [SerializeField] string forwardTiltParameter = "Forward Tilt";
-        [Group("Animation Parameters", true)]
-        [AnimationParameter(nameof(animator), AnimatorControllerParameterType.Float)]
-        [SerializeField] string turnParameter = "Turn";
-        [Group("Animation Parameters", true)]
-        [AnimationParameter(nameof(animator), AnimatorControllerParameterType.Trigger)]
-        [SerializeField] string blinkTriggerName = "Blink";
-        [Group("Animation Parameters", true)]
-        [AnimationParameter(nameof(animator), AnimatorControllerParameterType.Float)]
-        [SerializeField] string cycleOffsetParameter = "Cycle Offset";
-        [Group("Animation Parameters", true)]
-        [AnimationParameter(nameof(animator), AnimatorControllerParameterType.Bool)]
-        [SerializeField] string aliveParameter = "Alive";
-
-        [Group("Animation Parameters")]
-        [AnimationLayer(nameof(animator))]
-
-        private float timeUntilNextBlink = 0f;
-        private Dictionary<int, CancellationTokenSource> activeAnimationLerps = new();
-
-        #endregion
-
-        #region Interaction Variables
-        [Group("Interaction")]
-        [ShowIf(nameof(isPlayerControlled))]
-        [SerializeField] float interactionRadius = 1f;
-        [Group("Interaction")]
-        [ShowIf(nameof(isPlayerControlled))]
-        [SerializeField] Vector3 offset = Vector3.zero;
-
-        [Group("Interaction")]
-        [ShowIf(nameof(isPlayerControlled))]
-        [SerializeField] UnityEvent<Interactable>? onInteracting;
-
-        private List<Interactable> interactables = new();
-
-        private Interactable? currentInteractable = null;
-
-        #endregion
-
-        #region Animation Commands
-
-        [YarnCommand("tilt_forward")]
-        public YarnTask TiltForward(float destination, float time = 0f, bool wait = false)
-        {
-            var task = TweenAnimationParameter(forwardTiltParameter, destination, time, EasingFunctions.InOutQuad, destroyCancellationToken);
-            return wait ? task : YarnTask.CompletedTask;
-        }
-
-        [YarnCommand("tilt_side")]
-        public YarnTask TiltSide(float destination, float time = 0f, bool wait = false)
-        {
-            var task = TweenAnimationParameter(sideTiltParameter, destination, time, EasingFunctions.InOutQuad, destroyCancellationToken);
-            return wait ? task : YarnTask.CompletedTask;
-        }
-
-        [YarnCommand("turn")]
-        public YarnTask TurnCharacter(float destination, float time = 0f, bool wait = false)
-        {
-            var task = TweenAnimationParameter(turnParameter, destination, time, EasingFunctions.InOutQuad, destroyCancellationToken);
-            return wait ? task : YarnTask.CompletedTask;
-        }
-
-        [YarnCommand("tween_animation_parameter")]
-        public YarnTask TweenParameter(string parameter, float destination, float time, bool wait = false)
-        {
-            var task = TweenAnimationParameter(parameter, destination, time, EasingFunctions.InOutQuad, destroyCancellationToken);
-            return wait ? task : YarnTask.CompletedTask;
-        }
-
-        [YarnCommand("set_animator_bool")]
-        public void SetAnimatorBool(string parameterName, bool value)
-        {
-            if (animator == null)
-            {
-                Debug.LogError($"Can't set parameter {parameterName}: animator is not set");
-                return;
-            }
-            animator.SetBool(parameterName, value);
-        }
-
-        [YarnCommand("play_animation")]
-        public YarnTask PlayAnimation(string layerName, string stateName, bool wait = false)
-        {
-            if (animator == null)
-            {
-                Debug.LogError($"Can't play animation {stateName}: animator is not set");
-                return YarnTask.CompletedTask;
-            }
-
-            var layerIndex = animator.GetLayerIndex(layerName);
-            if (layerIndex == -1)
-            {
-                Debug.LogError($"Can't play animation {stateName}: no layer {layerName} found");
-                return YarnTask.CompletedTask;
-            }
-
-            var stateHash = Animator.StringToHash(stateName);
-            if (animator.HasState(layerIndex, stateHash) == false)
-            {
-                Debug.LogError($"Can't play animation {stateName}: no state {stateName} found in layer {layerName}");
-                return YarnTask.CompletedTask;
-            }
-
-            animator.Play(stateHash, layerIndex);
-
-            if (wait)
-            {
-                return WaitUntilAnimationComplete(animator, stateHash, layerIndex);
-            }
-            else
-            {
-                return YarnTask.CompletedTask;
-            }
-
-            static async YarnTask WaitUntilAnimationComplete(Animator animator, int stateNameHash, int layerIndex)
-            {
-                AnimatorStateInfo stateInfo;
-
-                // Wait until the animator starts playing this state
-                do
-                {
-                    stateInfo = animator.GetCurrentAnimatorStateInfo(layerIndex);
-                    await YarnTask.Yield();
-                } while (stateInfo.shortNameHash != stateNameHash);
-
-                // Wait until the animator is no longer playing this state
-                // or has reached the end of the state
-                do
-                {
-                    stateInfo = animator.GetCurrentAnimatorStateInfo(layerIndex);
-                    await YarnTask.Yield();
-                } while (stateInfo.shortNameHash == stateNameHash || stateInfo.normalizedTime >= 1);
-            }
-        }
-
-        [YarnCommand("face")]
-        public void SetFacialExpression(string name, float crossfadeTime = 0)
-        {
-            if (animator == null)
-            {
-                Debug.LogWarning($"{name} has no {nameof(Animator)}");
-                return;
-            }
-
-            if (!facialExpressions.TryGetValue(name, out var stateName))
-            {
-                Debug.LogWarning($"{name} is not a valid facial expression (expected {string.Join(", ", facialExpressions.Keys)})");
-                return;
-            }
-
-            if (crossfadeTime <= 0)
-            {
-                animator.Play(stateName, facialExpressionsLayerID);
-            }
-            else
-            {
-                animator.CrossFadeInFixedTime(stateName, crossfadeTime, facialExpressionsLayerID);
-            }
-        }
-
-        [YarnCommand("set_alive")]
-        public void SetAlive(bool alive, bool immediate = false)
-        {
-            this.IsAlive = alive;
-            if (animator != null)
-            {
-                animator.SetBool(aliveParameter, alive);
-                if (immediate)
-                {
-                    async YarnTask RunAnimationAtHighSpeed(Animator animator)
-                    {
-                        var previousSpeed = animator.speed;
-                        animator.speed = 10000;
-                        await YarnTask.Yield();
-                        animator.speed = previousSpeed;
-                    }
-                    RunAnimationAtHighSpeed(animator).Forget();
-                }
-            }
-            if (this.TryGetComponent<MouthView>(out var mouthView))
-            {
-                if (alive)
-                {
-                    mouthView.ClearOverride();
-                }
-                else if (deathMouthTexture != null)
-                {
-                    mouthView.SetOverride(deathMouthTexture);
-                }
-            }
-            if (this.characterController != null)
-            {
-                this.characterController.enabled = IsAlive;
-            }
-        }
-
-        #endregion
-
-        #region Animation Logic
-
-        protected void SetupAnimation()
-        {
-            characterController = GetComponent<CharacterController>();
-
-            if (animator != null)
-            {
-                facialExpressionsLayerID = animator.GetLayerIndex(facialExpressionsLayer);
-
-                // Randomly offset the cycle for the base pose so that
-                // characters don't sync up
-                animator.SetFloat(cycleOffsetParameter, Random.value);
-            }
-
-            timeUntilNextBlink = GetNextBlinkTime();
-        }
-
-        private float GetNextBlinkTime()
-        {
-            return meanBlinkTime + Mathf.Lerp(-blinkTimeVariance, blinkTimeVariance, UnityEngine.Random.value);
-        }
-
-        public void UpdateAnimation()
-        {
-
-            if (animator == null)
-            {
-                return;
-            }
-
-            timeUntilNextBlink -= Time.deltaTime;
-
-            if (timeUntilNextBlink <= 0 && !string.IsNullOrEmpty(blinkTriggerName))
-            {
-                animator.SetTrigger(blinkTriggerName);
-                timeUntilNextBlink = GetNextBlinkTime();
-            }
-
-            animator.SetFloat(speedParameter, CurrentSpeedFactor);
-        }
-
-        private async YarnTask TweenAnimationParameter(string animationParameter, float to, float duration, System.Func<float, float> easingFunction, CancellationToken cancellationToken)
-        {
-            if (animator == null)
-            {
-                return;
-            }
-
-            var hash = Animator.StringToHash(animationParameter);
-            var currentValue = animator.GetFloat(hash);
-
-            // If a tween was already running for this parameter, cancel it now
-            if (activeAnimationLerps.TryGetValue(hash, out var cancellationTokenSource))
-            {
-                cancellationTokenSource.Cancel();
-            }
-
-            // Create and store a cancellation token source for this animation
-            var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-            activeAnimationLerps[hash] = cts;
-
-            // Run the tween
-            await Tweening.TweenValue(currentValue, to, duration, easingFunction, value => animator.SetFloat(hash, value), cts.Token);
-
-            // Clean up
-            activeAnimationLerps.Remove(hash);
-        }
-        #endregion
-
-        #region Movement Commands
-        [YarnCommand("pause_path_movement")]
-        public void StopFollowingPath()
-        {
-            if (!HasPath)
-            {
-                Debug.LogError($"{name} is not currently following a path");
-                return;
-            }
-            this.Mode = CharacterMode.ExternallyControlledMovement;
-        }
-        [YarnCommand("resume_path_movement")]
-        public void ResumeFollowingPath()
-        {
-            if (!HasPath)
-            {
-                Debug.LogError($"{name} is not currently following a path");
-                return;
-            }
-            this.Mode = CharacterMode.PathMovement;
-        }
 
         #endregion
 
@@ -463,11 +123,11 @@ namespace MyGame.Characters
                     // Move towards current path node
                     // var nextPath = followPath.GetPositionData(currentDestinationPathIndex);
 
-                    var offset = followPath.GetWorldPosition(currentDestinationPathIndex) - transform.position;
-                    var input = new Vector2(offset.x, offset.z).normalized;
+                    var worldOffset = followPath.GetWorldPosition(currentDestinationPathIndex) - transform.position;
+                    var input = new Vector2(worldOffset.x, worldOffset.z).normalized;
                     ApplyMovement(input);
 
-                    if (offset.magnitude <= pathDestinationTolerance)
+                    if (worldOffset.magnitude <= pathDestinationTolerance)
                     {
                         // We've reached the destination
                         currentDestinationPathIndex = (currentDestinationPathIndex + 1) % followPath.Count;
@@ -602,130 +262,21 @@ namespace MyGame.Characters
         }
         #endregion
 
-        #region Interaction Logic
-
-        public void SetupInteraction()
-        {
-            interactables.Clear();
-
-            interactables.AddRange(FindObjectsByType<Interactable>(FindObjectsInactive.Include, FindObjectsSortMode.None));
-        }
-
-        protected void UpdateInteraction()
-        {
-            if (isPlayerControlled == false)
-            {
-                // Only player-controlled characters can interact
-                return;
-            }
-
-            if (!CanInteract)
-            {
-                // We can only interact if we're allowed to move around.
-                return;
-            }
-
-            var previousInteractable = currentInteractable;
-
-            (float Distance, Interactable? Interactable) nearest = (float.PositiveInfinity, null);
-
-            for (int i = 0; i < interactables.Count; i++)
-            {
-                var interactable = interactables[i];
-
-                if (!interactable.isActiveAndEnabled)
-                {
-                    // We can't interact if the component or its gameobject
-                    // isn't enabled
-                    continue;
-                }
-
-                if (interactable.gameObject == gameObject)
-                {
-                    // We can't interact with ourselves
-                    continue;
-                }
-
-                if (interactable.gameObject.TryGetComponent<SimpleCharacter>(out var character) && !character.IsAlive)
-                {
-                    // We can't interact with characters that aren't alive
-                    continue;
-                }
-
-                var distance = Vector3.Distance(transform.TransformPoint(offset), interactable.transform.position);
-                if (distance > interactionRadius)
-                {
-                    continue;
-                }
-                if (distance < nearest.Distance)
-                {
-                    nearest = (distance, interactable);
-                }
-            }
-
-            if (previousInteractable != nearest.Interactable)
-            {
-                if (previousInteractable != null) { previousInteractable.IsCurrent = false; }
-                if (nearest.Interactable != null) { nearest.Interactable.IsCurrent = true; }
-                currentInteractable = nearest.Interactable;
-            }
-
-            if (interactInput.WasPressedThisFrame && currentInteractable != null)
-            {
-                async YarnTask RunInteraction(Interactable interactable, CancellationToken cancellationToken)
-                {
-                    var previousMode = Mode;
-                    Mode = CharacterMode.Interact;
-
-                    if (interactable.InteractorShouldTurnToFaceWhenInteracted)
-                    {
-                        lookTarget = interactable.transform;
-                    }
-
-                    interactable.IsCurrent = false;
-                    currentInteractable = null;
-
-                    onInteracting?.Invoke(interactable);
-                    await interactable.Interact(gameObject);
-
-                    // Wait a frame so that if 'advance dialogue' is the same
-                    // button as 'interact', we don't accidentally trigger a new
-                    // dialogue with the same input as leaving the previous
-                    // dialogue (i.e. we'd never leave dialogue)
-                    await YarnTask.Yield();
-
-                    if (cancellationToken.IsCancellationRequested)
-                    {
-                        return;
-                    }
-
-                    if (interactable.InteractorShouldTurnToFaceWhenInteracted)
-                    {
-                        lookTarget = null;
-                    }
-
-                    Mode = previousMode;
-                }
-
-                RunInteraction(currentInteractable, this.destroyCancellationToken).Forget();
-            }
-        }
-
-        #endregion
-
         #region Core Logic
 
-        protected void Awake()
+        private void Start()
         {
-            Mode = CharacterMode.PlayerControlledMovement;
+            Debug.Log("Awake NPC");
+            Mode = CharacterMode.ExternallyControlledMovement;
 
             SetupMovement();
             SetupAnimation();
             SetupInteraction();
         }
 
-        protected void Update()
+        private void Update()
         {
+            // Debug.Log("Update NPC");
             UpdateMovement();
             UpdateAnimation();
             UpdateInteraction();

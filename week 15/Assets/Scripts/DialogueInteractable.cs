@@ -134,7 +134,7 @@ namespace MyGame.Characters
 
             dialogueRunner.StartDialogue(dialogue.nodeName);
 
-            if (turnsToInteractor && TryGetComponent<SimpleCharacter>(out var character))
+            if (turnsToInteractor && TryGetComponent<BaseCharacter>(out var character))
             {
                 character.lookTarget = interactor.transform;
             }
@@ -148,7 +148,7 @@ namespace MyGame.Characters
                 return;
             }
 
-            if (turnsToInteractor && TryGetComponent<SimpleCharacter>(out character))
+            if (turnsToInteractor && TryGetComponent<BaseCharacter>(out character))
             {
                 character.lookTarget = null;
             }
