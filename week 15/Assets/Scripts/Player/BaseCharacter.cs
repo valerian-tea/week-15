@@ -121,36 +121,27 @@ namespace MyGame.Characters
 
         protected void UpdateInteraction()
         {
-            // Debug.Log("UpdateInteraction called with isPlayerControlled " + isPlayerControlled);
-            // Debug.Log("UpdateInteraction called with CanInteract " + CanInteract);
-            // Console.WriteLine("Update interaction hERE");
             if (isPlayerControlled == false)
             {
                 // Only player-controlled characters can interact
-                // Debug.Log("Here1");
-
                 return;
             }
 
             if (!CanInteract)
             {
-                // Debug.Log("Here2");
                 // We can only interact if we're allowed to move around.
                 return;
             }
-            Debug.Log("Here3");
 
             var previousInteractable = currentInteractable;
 
             (float Distance, Interactable? Interactable) nearest = (float.PositiveInfinity, null);
-            Debug.Log("nearest" + interactables.Count);
             for (int i = 0; i < interactables.Count; i++)
             {
                 var interactable = interactables[i];
 
                 if (!interactable.isActiveAndEnabled)
                 {
-                    Debug.Log("Here4");
                     // We can't interact if the component or its gameobject
                     // isn't enabled
                     continue;
@@ -158,14 +149,12 @@ namespace MyGame.Characters
 
                 if (interactable.gameObject == gameObject)
                 {
-                    Debug.Log("Here5");
                     // We can't interact with ourselves
                     continue;
                 }
 
                 if (interactable.gameObject.TryGetComponent<SimpleCharacter>(out var character) && !character.IsAlive)
                 {
-                    Debug.Log("Here6");
                     // We can't interact with characters that aren't alive
                     continue;
                 }
