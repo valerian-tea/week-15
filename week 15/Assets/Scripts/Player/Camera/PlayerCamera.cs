@@ -4,9 +4,11 @@ public class PlayerCamera : MonoBehaviour
 {
     public float sensX;
     public float sensY;
+    public float smoothTime = 0.05f;
     public Transform orientation;
     float xRotation;
     float yRotation;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -17,7 +19,6 @@ public class PlayerCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         // Cursor.lockState = CursorLockMode.Locked;
         // Cursor.visible = false;
 
@@ -32,5 +33,4 @@ public class PlayerCamera : MonoBehaviour
         transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
         orientation.rotation = Quaternion.Euler(0, yRotation, 0);
     }
-
 }

@@ -2,7 +2,7 @@
 color: green
 position: -200,200
 ---
-Welcome!
+Welcome! Press Space to continue.
 To interact with characters, approach them and press space.
 To view your bag, press B.
 ===
@@ -36,9 +36,9 @@ Pierrot: Agreed. Aren't you worried, Miss Casey?
 <<else>>
 <<once>>
 Tweety: As much as I'd love to chat, I must go to class.
-Pierrot: Shouldn't you be off too, Miss Casey?
+Tweety: Shouldn't you be off too, Miss Casey?
 <<else>>
-Pierrot: Shouldn't you be off too, Miss Casey?
+Tweety: Shouldn't you be off too, Miss Casey?
 <<endonce>>
 <<endonce>>
 ===

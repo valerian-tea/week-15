@@ -7,7 +7,6 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
 using Yarn.Unity;
-
 #if USE_TMP
 using TMPro;
 #else
@@ -20,16 +19,26 @@ namespace Yarn.Unity.Samples
 {
     public class Slideshow : DialoguePresenterBase
     {
-        [SerializeField] TMP_Text? headerText;
-        [SerializeField] TMP_Text? bodyText;
-        [SerializeField] Image? image;
+        [SerializeField]
+        TMP_Text? headerText;
 
-        [SerializeField] List<GameObject> projectionItems = new();
-        [SerializeField] float delayBeforeShowingNewSlide = 0.5f;
+        [SerializeField]
+        TMP_Text? bodyText;
 
-        [SerializeField] List<DialoguePresenterBase> overrideDialogueViews = new();
+        [SerializeField]
+        Image? image;
 
-        [SerializeField] bool startOff = true;
+        [SerializeField]
+        List<GameObject> projectionItems = new();
+
+        [SerializeField]
+        float delayBeforeShowingNewSlide = 0.5f;
+
+        [SerializeField]
+        List<DialoguePresenterBase> overrideDialogueViews = new();
+
+        [SerializeField]
+        bool startOff = true;
 
         bool isRunningSlideshow = false;
 
@@ -65,7 +74,9 @@ namespace Yarn.Unity.Samples
 
             if (slideshow == null)
             {
-                Debug.LogError($"Can't start building slide: no {typeof(Slideshow)} present in the scene!");
+                Debug.LogError(
+                    $"Can't start building slide: no {typeof(Slideshow)} present in the scene!"
+                );
                 return YarnTask.CompletedTask;
             }
 
@@ -101,7 +112,9 @@ namespace Yarn.Unity.Samples
 
             if (slideshow == null)
             {
-                Debug.LogError($"Can't start building slide: no {typeof(Slideshow)} present in the scene!");
+                Debug.LogError(
+                    $"Can't start building slide: no {typeof(Slideshow)} present in the scene!"
+                );
                 return;
             }
 
@@ -112,7 +125,9 @@ namespace Yarn.Unity.Samples
 
             if (slideshow.delayBeforeShowingNewSlide > 0)
             {
-                await YarnTask.Delay(System.TimeSpan.FromSeconds(slideshow.delayBeforeShowingNewSlide));
+                await YarnTask.Delay(
+                    System.TimeSpan.FromSeconds(slideshow.delayBeforeShowingNewSlide)
+                );
             }
 
             foreach (var overriddenView in slideshow.overrideDialogueViews)
@@ -135,7 +150,9 @@ namespace Yarn.Unity.Samples
 
             if (slideshow == null)
             {
-                Debug.LogError($"Can't clear slideshow: no {typeof(Slideshow)} present in the scene!");
+                Debug.LogError(
+                    $"Can't clear slideshow: no {typeof(Slideshow)} present in the scene!"
+                );
                 return;
             }
 
@@ -188,7 +205,6 @@ namespace Yarn.Unity.Samples
                 string result = bodyText.text;
                 if (text.Length > 0)
                 {
-
                     result = $"{result}\n• {text}";
                 }
                 else
@@ -230,7 +246,10 @@ namespace Yarn.Unity.Samples
             return YarnTask.CompletedTask;
         }
 
-        public override YarnTask<DialogueOption?> RunOptionsAsync(DialogueOption[] dialogueOptions, CancellationToken cancellationToken)
+        public override YarnTask<DialogueOption?> RunOptionsAsync(
+            DialogueOption[] dialogueOptions,
+            CancellationToken cancellationToken
+        )
         {
             return YarnTask.FromResult<DialogueOption?>(null);
         }
