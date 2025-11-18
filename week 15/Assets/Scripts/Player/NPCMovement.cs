@@ -2,42 +2,53 @@
 // using System.Diagnostics;
 using Yarn.Unity;
 using Yarn.Unity.Samples;
+
 namespace MyGame.Characters
 {
-    using UnityEngine;
-    using System.Threading;
-    using Yarn.Unity.Attributes;
     using System.Collections.Generic;
-    using UnityEngine.Events;
+    using System.Threading;
     using System.Threading.Tasks;
+    using UnityEngine;
+    using UnityEngine.Events;
+    using Yarn.Unity.Attributes;
 
     public class NPCMovement : BaseCharacter
     {
-
         #region Movement Variables
 
         [Group("Movement")]
-        [SerializeField] float speed;
-        [Group("Movement")]
-        [SerializeField] float gravity = 10;
-        [Group("Movement")]
-        [SerializeField] float turnSpeed;
+        [SerializeField]
+        float speed;
 
         [Group("Movement")]
-        [SerializeField] float acceleration = 0.5f;
+        [SerializeField]
+        float gravity = 10;
+
         [Group("Movement")]
-        [SerializeField] float deceleration = 0.1f;
-        
+        [SerializeField]
+        float turnSpeed;
+
+        [Group("Movement")]
+        [SerializeField]
+        float acceleration = 0.5f;
+
+        [Group("Movement")]
+        [SerializeField]
+        float deceleration = 0.1f;
+
         [Group("Movement")]
         [ShowIf(nameof(isPlayerControlled))]
-        [SerializeField] float outOfBoundsYPosition = -5;
+        [SerializeField]
+        float outOfBoundsYPosition = -5;
 
         [HideIf(nameof(isPlayerControlled))]
-        [SerializeField] float pathDestinationTolerance = 0.1f;
+        [SerializeField]
+        float pathDestinationTolerance = 0.1f;
 
         [Group("Movement")]
         [ShowIf(nameof(isPlayerControlled))]
-        [SerializeField] InputAxisVector2 movementInput = new();
+        [SerializeField]
+        InputAxisVector2 movementInput = new();
 
         private int currentDestinationPathIndex = -1;
         private float remainingPathWaitTime = 0f;
@@ -63,7 +74,7 @@ namespace MyGame.Characters
 
             if (!isPlayerControlled && followPath != null && followPath.Count >= 2)
             {
-                // If we have a follow path, start there, and look at the 
+                // If we have a follow path, start there, and look at the
                 var startPoint = followPath.GetWorldPosition(0);
                 var nextPoint = followPath.GetWorldPosition(1);
                 transform.position = startPoint;
@@ -92,7 +103,6 @@ namespace MyGame.Characters
 
         public override void UpdateMovement()
         {
-
             if (isPlayerControlled && Mode == CharacterMode.PlayerControlledMovement)
             {
                 Vector2 input = movementInput.Value;
@@ -103,7 +113,8 @@ namespace MyGame.Characters
             {
                 // Our movement is externally controlled; update our animator
                 // based how quickly we're moving
-                var currentSpeed = (lastFrameWorldPosition - transform.position).magnitude / Time.deltaTime;
+                var currentSpeed =
+                    (lastFrameWorldPosition - transform.position).magnitude / Time.deltaTime;
                 CurrentSpeedFactor = Mathf.Clamp01(currentSpeed / speed);
             }
             else if (Mode == CharacterMode.PathMovement && followPath != null)
@@ -123,14 +134,17 @@ namespace MyGame.Characters
                     // Move towards current path node
                     // var nextPath = followPath.GetPositionData(currentDestinationPathIndex);
 
-                    var worldOffset = followPath.GetWorldPosition(currentDestinationPathIndex) - transform.position;
+                    var worldOffset =
+                        followPath.GetWorldPosition(currentDestinationPathIndex)
+                        - transform.position;
                     var input = new Vector2(worldOffset.x, worldOffset.z).normalized;
                     ApplyMovement(input);
 
                     if (worldOffset.magnitude <= pathDestinationTolerance)
                     {
                         // We've reached the destination
-                        currentDestinationPathIndex = (currentDestinationPathIndex + 1) % followPath.Count;
+                        currentDestinationPathIndex =
+                            (currentDestinationPathIndex + 1) % followPath.Count;
                         remainingPathWaitTime = followPath.GetDelay(currentDestinationPathIndex);
                     }
                 }
@@ -172,18 +186,20 @@ namespace MyGame.Characters
 
             void ApplyMovement(Vector2 input)
             {
-                float rawSpeed = input.magnitude < 0.001 ? 0f : Mathf.Clamp01(input.magnitude) * speed;
+                float rawSpeed =
+                    input.magnitude < 0.001 ? 0f : Mathf.Clamp01(input.magnitude) * speed;
 
                 var dampingTime = (rawSpeed > lastFrameSpeed) ? acceleration : deceleration;
 
-                var dampedSpeed = Mathf.SmoothDamp(lastFrameSpeed, rawSpeed, ref lastFrameSpeedChange, dampingTime);
+                var dampedSpeed = Mathf.SmoothDamp(
+                    lastFrameSpeed,
+                    rawSpeed,
+                    ref lastFrameSpeedChange,
+                    dampingTime
+                );
                 lastFrameSpeed = dampedSpeed;
 
-                var movement = new Vector3(
-                    input.x,
-                    0,
-                    input.y
-                );
+                var movement = new Vector3(input.x, 0, input.y);
 
                 if (movement.magnitude > 0)
                 {
@@ -237,12 +253,18 @@ namespace MyGame.Characters
 
             do
             {
-                transform.position = Vector3.MoveTowards(transform.position, position, speed * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(
+                    transform.position,
+                    position,
+                    speed * Time.deltaTime
+                );
                 this.CurrentSpeedFactor = 1;
 
                 await YarnTask.Yield();
-
-            } while (Vector3.Distance(transform.position, position) > 0.05f && !cancellationToken.IsCancellationRequested);
+            } while (
+                Vector3.Distance(transform.position, position) > 0.05f
+                && !cancellationToken.IsCancellationRequested
+            );
 
             lookTarget = previousLookTarget;
 
@@ -266,7 +288,6 @@ namespace MyGame.Characters
 
         private void Start()
         {
-            Debug.Log("Awake NPC");
             Mode = CharacterMode.ExternallyControlledMovement;
 
             SetupMovement();
@@ -276,7 +297,6 @@ namespace MyGame.Characters
 
         private void Update()
         {
-            // Debug.Log("Update NPC");
             UpdateMovement();
             UpdateAnimation();
             UpdateInteraction();

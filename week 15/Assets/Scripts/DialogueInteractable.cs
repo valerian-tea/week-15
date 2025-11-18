@@ -1,6 +1,7 @@
 #nullable enable
 using Yarn.Unity;
 using Yarn.Unity.Samples;
+
 namespace MyGame.Characters
 {
     using UnityEngine;
@@ -8,15 +9,21 @@ namespace MyGame.Characters
 
     public abstract class Interactable : MonoBehaviour
     {
-        [SerializeField] protected UnityEvent<bool>? onActiveChanged;
-        [SerializeField] protected UnityEvent? onInteractionStarted;
-        [SerializeField] protected UnityEvent? onInteractionEnded;
+        [SerializeField]
+        protected UnityEvent<bool>? onActiveChanged;
+
+        [SerializeField]
+        protected UnityEvent? onInteractionStarted;
+
+        [SerializeField]
+        protected UnityEvent? onInteractionEnded;
 
         private bool _isCurrent;
 
         public virtual bool IsCurrent
         {
-            get => _isCurrent; set
+            get => _isCurrent;
+            set
             {
                 _isCurrent = value;
 
@@ -31,10 +38,14 @@ namespace MyGame.Characters
 
     public class DialogueInteractable : Interactable
     {
-        [SerializeField] DialogueReference dialogue = new();
-        [SerializeField] DialogueRunner? dialogueRunner;
+        [SerializeField]
+        DialogueReference dialogue = new();
 
-        [SerializeField] bool turnsToInteractor = true;
+        [SerializeField]
+        DialogueRunner? dialogueRunner;
+
+        [SerializeField]
+        bool turnsToInteractor = true;
 
         public override bool InteractorShouldTurnToFaceWhenInteracted => turnsToInteractor;
 
@@ -51,7 +62,11 @@ namespace MyGame.Characters
             {
                 dialogueRunner = FindAnyObjectByType<DialogueRunner>();
             }
-            if (dialogueRunner != null && dialogueRunner.YarnProject != null && dialogue.project == null)
+            if (
+                dialogueRunner != null
+                && dialogueRunner.YarnProject != null
+                && dialogue.project == null
+            )
             {
                 dialogue.project = dialogueRunner.YarnProject;
             }
@@ -84,19 +99,26 @@ namespace MyGame.Characters
                     // TODO: remove this once YS core is updated
                     if (dialogueRunner.Dialogue.ContentSaliencyStrategy == null)
                     {
-                        dialogueRunner.Dialogue.ContentSaliencyStrategy = new Yarn.Saliency.FirstSaliencyStrategy();
+                        dialogueRunner.Dialogue.ContentSaliencyStrategy =
+                            new Yarn.Saliency.FirstSaliencyStrategy();
                     }
 
-                    var runnableContent = dialogueRunner.Dialogue.GetSaliencyOptionsForNodeGroup(dialogue.nodeName);
-                    var content = dialogueRunner.Dialogue.ContentSaliencyStrategy.QueryBestContent(runnableContent);
+                    var runnableContent = dialogueRunner.Dialogue.GetSaliencyOptionsForNodeGroup(
+                        dialogue.nodeName
+                    );
+                    var content = dialogueRunner.Dialogue.ContentSaliencyStrategy.QueryBestContent(
+                        runnableContent
+                    );
 
-                    if (content == null)
+                    if (content == null || runnableContent == null)
                     {
                         // We have no content we can run. Don't show the indicator.
+                        Debug.Log(
+                            $"DialogueInteractable: no runnable content for dialogue {dialogue.nodeName}"
+                        );
                         onActiveChanged?.Invoke(false);
                         return;
                     }
-
                 }
 
                 base.IsCurrent = value;
@@ -110,6 +132,8 @@ namespace MyGame.Characters
 
         public override async YarnTask Interact(GameObject interactor)
         {
+            Debug.Log("Starting dialogue interaction");
+            Debug.Log("isCurrent before interaction: " + IsCurrent);
             if (dialogue == null)
             {
                 return;
@@ -126,13 +150,19 @@ namespace MyGame.Characters
             }
             if (dialogueRunner.IsDialogueRunning)
             {
-                Debug.LogError($"Can't run dialogue {dialogue}: dialogue runner is already running");
+                Debug.LogError(
+                    $"Can't run dialogue {dialogue}: dialogue runner is already running"
+                );
                 return;
             }
 
             onInteractionStarted?.Invoke();
 
+            Debug.Log("isCurrent just b4 interaction: " + IsCurrent);
+
             dialogueRunner.StartDialogue(dialogue.nodeName);
+
+            Debug.Log("isCurrent just after interaction: " + IsCurrent);
 
             if (turnsToInteractor && TryGetComponent<BaseCharacter>(out var character))
             {
@@ -143,6 +173,10 @@ namespace MyGame.Characters
 
             await dialogueRunner.DialogueTask;
 
+            Debug.Log("isCurrent before refresh: " + IsCurrent);
+            RefreshAvailability();
+            Debug.Log("isCurrent after refresh: " + IsCurrent);
+
             if (destroyCancellation.IsCancellationRequested)
             {
                 return;
@@ -151,6 +185,33 @@ namespace MyGame.Characters
             if (turnsToInteractor && TryGetComponent<BaseCharacter>(out character))
             {
                 character.lookTarget = null;
+            }
+        }
+
+        private void RefreshAvailability()
+        {
+            if (dialogueRunner == null || dialogue == null)
+            {
+                IsCurrent = false;
+                return;
+            }
+
+            IsCurrent = false;
+
+            var options = dialogueRunner.Dialogue.GetSaliencyOptionsForNodeGroup(dialogue.nodeName);
+            var content = dialogueRunner.Dialogue.ContentSaliencyStrategy.QueryBestContent(options);
+            Debug.Log("Options count: " + options);
+            Debug.Log("Refreshed content: " + content);
+            if (content == null)
+            {
+                // Yarn says: “this node has no runnable content” → disable interaction
+                IsCurrent = false;
+                onActiveChanged?.Invoke(false);
+            }
+            else
+            {
+                // Still has content — allow future interactions
+                IsCurrent = false;
             }
         }
     }

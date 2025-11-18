@@ -13,25 +13,17 @@ namespace MyGame.Characters
         float horizontalInput;
         float verticalInput;
         Vector3 moveDirection;
+        public float groundDrag;
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         private void Start()
         {
             rb = GetComponent<Rigidbody>();
             rb.freezeRotation = true;
-            Debug.Log("Awake Player");
             Mode = CharacterMode.PlayerControlledMovement;
             SetupAnimation();
             SetupInteraction();
         }
-
-        // protected void Awake()
-        // {
-        //     Debug.Log("Awake Player");
-        //     Mode = CharacterMode.PlayerControlledMovement;
-        //     SetupAnimation();
-        //     SetupInteraction();
-        // }
 
         // Update is called once per frame
         private void Update()
@@ -54,6 +46,7 @@ namespace MyGame.Characters
         {
             moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
             rb.AddForce(moveDirection.normalized * moveSpeed * 5f, ForceMode.Force);
+            rb.linearDamping = groundDrag;
         }
 
     }

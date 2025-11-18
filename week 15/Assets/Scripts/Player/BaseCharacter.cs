@@ -2,18 +2,21 @@
 using System;
 using Yarn.Unity;
 using Yarn.Unity.Samples;
+
 namespace MyGame.Characters
 {
-    using UnityEngine;
-    using System.Threading;
-    using Yarn.Unity.Attributes;
     using System.Collections.Generic;
-    using UnityEngine.Events;
+    using System.Threading;
     using System.Threading.Tasks;
+    using UnityEngine;
+    using UnityEngine.Events;
+    using Yarn.Unity.Attributes;
 
     public abstract class BaseCharacter : MonoBehaviour
     {
-        [SerializeField] protected bool isPlayerControlled;
+        [SerializeField]
+        protected bool isPlayerControlled;
+
         public enum CharacterMode
         {
             PlayerControlledMovement,
@@ -27,8 +30,9 @@ namespace MyGame.Characters
         protected CharacterController? characterController;
 
         [HideIf(nameof(isPlayerControlled))]
-        [SerializeField] protected SimplePath? followPath;
-        
+        [SerializeField]
+        protected SimplePath? followPath;
+
         public float CurrentSpeedFactor { get; private set; } = 0f;
 
         public bool CanInteract => Mode == CharacterMode.PlayerControlledMovement;
@@ -36,54 +40,76 @@ namespace MyGame.Characters
 
         [Group("Movement")]
         [ShowIf(nameof(isPlayerControlled))]
-        [SerializeField] protected InputAxisButton interactInput = new();
+        [SerializeField]
+        protected InputAxisButton interactInput = new();
 
         [Group("Movement")]
         public Transform? lookTarget;
         public bool IsAlive { get; protected set; } = true;
 
-        #region Animation Variables     
+        #region Animation Variables
         [Group("Animation")]
-        [SerializeField] private Animator? animator;
+        [SerializeField]
+        private Animator? animator;
+
         [Group("Animation")]
-        [SerializeField] SerializableDictionary<string, string> facialExpressions = new();
+        [SerializeField]
+        SerializableDictionary<string, string> facialExpressions = new();
+
         [Group("Animation")]
-        [SerializeField] string facialExpressionsLayer = "Face";
+        [SerializeField]
+        string facialExpressionsLayer = "Face";
         private int facialExpressionsLayerID = 0;
 
-        [SerializeField] Texture2D? deathMouthTexture;
+        [SerializeField]
+        Texture2D? deathMouthTexture;
 
         [Group("Animation")]
         [Header("Blinking")]
-        [SerializeField] float meanBlinkTime = 2f;
+        [SerializeField]
+        float meanBlinkTime = 2f;
+
         [Group("Animation")]
-        [SerializeField] float blinkTimeVariance = 0.5f;
+        [SerializeField]
+        float blinkTimeVariance = 0.5f;
 
         [Group("Animation Parameters", true)]
         [AnimationParameter(nameof(animator), AnimatorControllerParameterType.Float)]
-        [SerializeField] private string speedParameter = "Speed";
+        [SerializeField]
+        private string speedParameter = "Speed";
+
         [Group("Animation Parameters", true)]
         [AnimationParameter(nameof(animator), AnimatorControllerParameterType.Float)]
-        [SerializeField] private string sideTiltParameter = "Side Tilt";
+        [SerializeField]
+        private string sideTiltParameter = "Side Tilt";
+
         [Group("Animation Parameters", true)]
         [AnimationParameter(nameof(animator), AnimatorControllerParameterType.Float)]
-        [SerializeField] private string forwardTiltParameter = "Forward Tilt";
+        [SerializeField]
+        private string forwardTiltParameter = "Forward Tilt";
+
         [Group("Animation Parameters", true)]
         [AnimationParameter(nameof(animator), AnimatorControllerParameterType.Float)]
-        [SerializeField] private string turnParameter = "Turn";
+        [SerializeField]
+        private string turnParameter = "Turn";
+
         [Group("Animation Parameters", true)]
         [AnimationParameter(nameof(animator), AnimatorControllerParameterType.Trigger)]
-        [SerializeField] string blinkTriggerName = "Blink";
+        [SerializeField]
+        string blinkTriggerName = "Blink";
+
         [Group("Animation Parameters", true)]
         [AnimationParameter(nameof(animator), AnimatorControllerParameterType.Float)]
-        [SerializeField] string cycleOffsetParameter = "Cycle Offset";
+        [SerializeField]
+        string cycleOffsetParameter = "Cycle Offset";
+
         [Group("Animation Parameters", true)]
         [AnimationParameter(nameof(animator), AnimatorControllerParameterType.Bool)]
-        [SerializeField] string aliveParameter = "Alive";
+        [SerializeField]
+        string aliveParameter = "Alive";
 
         [Group("Animation Parameters")]
         [AnimationLayer(nameof(animator))]
-
         private float timeUntilNextBlink = 0f;
         private Dictionary<int, CancellationTokenSource> activeAnimationLerps = new();
 
@@ -91,13 +117,18 @@ namespace MyGame.Characters
         #region Interaction Variables
         [Group("Interaction")]
         [ShowIf(nameof(isPlayerControlled))]
-        [SerializeField] protected float interactionRadius = 1f;
+        [SerializeField]
+        protected float interactionRadius = 1f;
+
         [Group("Interaction")]
         [ShowIf(nameof(isPlayerControlled))]
-        [SerializeField] protected Vector3 offset = Vector3.zero;
+        [SerializeField]
+        protected Vector3 offset = Vector3.zero;
+
         [Group("Interaction")]
         [ShowIf(nameof(isPlayerControlled))]
-        [SerializeField] UnityEvent<Interactable>? onInteracting;
+        [SerializeField]
+        UnityEvent<Interactable>? onInteracting;
 
         private List<Interactable> interactables = new();
 
@@ -115,8 +146,12 @@ namespace MyGame.Characters
         {
             interactables.Clear();
 
-            interactables.AddRange(FindObjectsByType<Interactable>(FindObjectsInactive.Include, FindObjectsSortMode.None));
-
+            interactables.AddRange(
+                FindObjectsByType<Interactable>(
+                    FindObjectsInactive.Include,
+                    FindObjectsSortMode.None
+                )
+            );
         }
 
         protected void UpdateInteraction()
@@ -153,13 +188,19 @@ namespace MyGame.Characters
                     continue;
                 }
 
-                if (interactable.gameObject.TryGetComponent<SimpleCharacter>(out var character) && !character.IsAlive)
+                if (
+                    interactable.gameObject.TryGetComponent<SimpleCharacter>(out var character)
+                    && !character.IsAlive
+                )
                 {
                     // We can't interact with characters that aren't alive
                     continue;
                 }
 
-                var distance = Vector3.Distance(transform.TransformPoint(offset), interactable.transform.position);
+                var distance = Vector3.Distance(
+                    transform.TransformPoint(offset),
+                    interactable.transform.position
+                );
                 if (distance > interactionRadius)
                 {
                     continue;
@@ -172,14 +213,24 @@ namespace MyGame.Characters
 
             if (previousInteractable != nearest.Interactable)
             {
-                if (previousInteractable != null) { previousInteractable.IsCurrent = false; }
-                if (nearest.Interactable != null) { nearest.Interactable.IsCurrent = true; }
+                if (previousInteractable != null)
+                {
+                    previousInteractable.IsCurrent = false;
+                }
+                if (nearest.Interactable != null)
+                {
+                    nearest.Interactable.IsCurrent = true;
+                    Debug.Log("Setting isCurrent to true: " + nearest.Interactable.IsCurrent);
+                }
                 currentInteractable = nearest.Interactable;
             }
 
             if (interactInput.WasPressedThisFrame && currentInteractable != null)
             {
-                async YarnTask RunInteraction(Interactable interactable, CancellationToken cancellationToken)
+                async YarnTask RunInteraction(
+                    Interactable interactable,
+                    CancellationToken cancellationToken
+                )
                 {
                     var previousMode = Mode;
                     Mode = CharacterMode.Interact;
@@ -190,6 +241,7 @@ namespace MyGame.Characters
                     }
 
                     interactable.IsCurrent = false;
+                    Debug.Log("Setting isCurrent with " + interactable.IsCurrent);
                     currentInteractable = null;
 
                     onInteracting?.Invoke(interactable);
@@ -239,12 +291,12 @@ namespace MyGame.Characters
 
         private float GetNextBlinkTime()
         {
-            return meanBlinkTime + Mathf.Lerp(-blinkTimeVariance, blinkTimeVariance, UnityEngine.Random.value);
+            return meanBlinkTime
+                + Mathf.Lerp(-blinkTimeVariance, blinkTimeVariance, UnityEngine.Random.value);
         }
 
         public void UpdateAnimation()
         {
-
             if (animator == null)
             {
                 return;
@@ -261,7 +313,13 @@ namespace MyGame.Characters
             animator.SetFloat(speedParameter, CurrentSpeedFactor);
         }
 
-        protected async YarnTask TweenAnimationParameter(string animationParameter, float to, float duration, System.Func<float, float> easingFunction, CancellationToken cancellationToken)
+        protected async YarnTask TweenAnimationParameter(
+            string animationParameter,
+            float to,
+            float duration,
+            System.Func<float, float> easingFunction,
+            CancellationToken cancellationToken
+        )
         {
             if (animator == null)
             {
@@ -282,7 +340,14 @@ namespace MyGame.Characters
             activeAnimationLerps[hash] = cts;
 
             // Run the tween
-            await Tweening.TweenValue(currentValue, to, duration, easingFunction, value => animator.SetFloat(hash, value), cts.Token);
+            await Tweening.TweenValue(
+                currentValue,
+                to,
+                duration,
+                easingFunction,
+                value => animator.SetFloat(hash, value),
+                cts.Token
+            );
 
             // Clean up
             activeAnimationLerps.Remove(hash);
@@ -306,6 +371,5 @@ namespace MyGame.Characters
         // }
 
         #endregion
-
     }
 }
