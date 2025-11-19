@@ -2,9 +2,15 @@
 color: green
 position: -200,200
 ---
-Welcome! Press Space to continue.
-To interact with characters, approach them and press space.
-To view your bag, press B.
+(Ugh, where am I?)
+(Must've fallen asleep grading papers again...)
+<<jump Controls>>
+===
+
+title: Controls
+---
+Welcome to your new job!
+Tip: Press P to pause the game.
 ===
 
 title: WarmWelcome
@@ -41,11 +47,4 @@ Tweety: Shouldn't you be off too, Miss Casey?
 Tweety: Shouldn't you be off too, Miss Casey?
 <<endonce>>
 <<endonce>>
-===
-
-title: End
-color: green
-position: 0,400
----
-Woohoo! This is the end of the demo!
 ===

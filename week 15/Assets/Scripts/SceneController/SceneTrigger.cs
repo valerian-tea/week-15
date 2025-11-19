@@ -19,7 +19,7 @@ public class SceneTrigger : MonoBehaviour
         {
             sceneChangeText.SetActive(true);
 
-            if (Input.GetKey(KeyCode.E))
+            if (Input.GetKey(KeyCode.Space))
             {
                 Debug.Log("Player reached destination, loading scene: " + sceneToLoad);
                 SceneManager.LoadScene(sceneToLoad);

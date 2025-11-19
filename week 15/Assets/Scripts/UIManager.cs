@@ -45,10 +45,9 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.B))
+        if (Input.GetKeyDown(KeyCode.P))
         {
             ToggleInventory();
         }
-
     }
 }

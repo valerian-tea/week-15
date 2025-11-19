@@ -353,23 +353,5 @@ namespace MyGame.Characters
             activeAnimationLerps.Remove(hash);
         }
         #endregion
-
-        #region Core logic
-        // protected void Awake()
-        // {
-        //     Mode = CharacterMode.PlayerControlledMovement;
-
-        //     // SetupMovement();
-        //     // SetupAnimation();
-        //     SetupInteraction();
-        // }
-
-        // protected virtual void Update() {
-        //     // UpdateMovement();
-        //     // UpdateAnimation();
-        //     UpdateInteraction();
-        // }
-
-        #endregion
     }
 }
