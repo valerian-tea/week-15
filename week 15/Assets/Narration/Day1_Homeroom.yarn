@@ -1,0 +1,22 @@
+﻿title: StartHomeroom
+---
+Casey: Hi class, sorry I'm a bit late. Let's get started with roll call.
+Casey: Mia?
+Mia: Here!
+Casey: Michelle?
+Michelle: Here!
+Casey: Liam?
+Liam: Prrrrresent!
+** giggles **
+Michelle: You're too much, Liam.
+The roll call continues...
+Casey: Sam?
+...
+(No Sam again today.)
+<<jump EndHomeroom>>
+===
+
+title:EndHomeroom
+---
+Woohoo, you've reached the end of the demo!
+===

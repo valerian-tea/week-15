@@ -1,0 +1,50 @@
+﻿title: Intro
+color: green
+position: -200,200
+---
+(Ugh, where am I?)
+(Must've fallen asleep grading papers again...)
+<<jump Controls>>
+===
+
+title: Controls
+---
+Welcome to your new job!
+Tip: Press P to pause the game.
+===
+
+title: WarmWelcome
+color: blue
+position: 0,0
+---
+<<once>>
+Grump: Oh, it's you.
+Grump: Shouldn't you be in class?
+<<else>>
+Grump: Your students are waiting for you.
+<<endonce>>
+===
+
+title: Gossip
+color: blue
+position: 200,200
+---
+<<once>>
+Tweety: Did you hear? She's absent again. 
+Pierrot: I'd be shocked if she graduates.
+Tweety: Seriously. Such a delinquent. Someone like her shouldn't walk with the rest of the students.
+Pierrot: Agreed. Aren't you worried, Miss Casey?
+-> Casey: She's improving.
+    Pierrot: If I were you, I'd be more worried. I mean, I take my reputation seriously.
+    Tweety: Clearly, not everyone does...
+-> Casey: Yes, I am.
+    Pierrot: You should be.
+<<else>>
+<<once>>
+Tweety: As much as I'd love to chat, I must go to class.
+Tweety: Shouldn't you be off too, Miss Casey?
+<<else>>
+Tweety: Shouldn't you be off too, Miss Casey?
+<<endonce>>
+<<endonce>>
+===
