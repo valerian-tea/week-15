@@ -3,6 +3,7 @@ using UnityEngine;
 public class UIManager : MonoBehaviour
 {
     public GameObject[] panels;
+    public static bool isInventoryOpen { get; private set; }
 
     private GameObject GetPanelByName(string panelName)
     {
@@ -27,16 +28,14 @@ public class UIManager : MonoBehaviour
                 cg.alpha = 0f;
                 cg.interactable = false;
                 cg.blocksRaycasts = false;
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
+                isInventoryOpen = false;
             }
             else // Show inventory
             {
                 cg.alpha = 1f;
                 cg.interactable = true;
                 cg.blocksRaycasts = true;
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
+                isInventoryOpen = true;
             }
 
             Time.timeScale = (cg.alpha == 1f) ? 0f : 1f;
