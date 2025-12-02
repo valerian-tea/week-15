@@ -29,14 +29,9 @@ namespace MyGame.Characters
 
         protected CharacterController? characterController;
 
-        [HideIf(nameof(isPlayerControlled))]
-        [SerializeField]
-        protected SimplePath? followPath;
-
         public float CurrentSpeedFactor { get; private set; } = 0f;
 
         public bool CanInteract => Mode == CharacterMode.PlayerControlledMovement;
-        public bool HasPath => followPath != null;
 
         [Group("Movement")]
         [ShowIf(nameof(isPlayerControlled))]

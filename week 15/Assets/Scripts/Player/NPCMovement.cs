@@ -50,6 +50,10 @@ namespace MyGame.Characters
         [SerializeField]
         InputAxisVector2 movementInput = new();
 
+        [HideIf(nameof(isPlayerControlled))]
+        [SerializeField]
+        protected SimplePath? followPath;
+        public bool HasPath => followPath != null;
         private int currentDestinationPathIndex = -1;
         private float remainingPathWaitTime = 0f;
 
@@ -74,15 +78,22 @@ namespace MyGame.Characters
 
             if (!isPlayerControlled && followPath != null && followPath.Count >= 2)
             {
-                // If we have a follow path, start there, and look at the
                 var startPoint = followPath.GetWorldPosition(0);
                 var nextPoint = followPath.GetWorldPosition(1);
+                Debug.Log("Start point: " + startPoint + " Next point: " + nextPoint);
+
                 transform.position = startPoint;
                 targetRotation = Quaternion.LookRotation(nextPoint - startPoint);
                 transform.rotation = GetCurrentLookDirection();
 
                 currentDestinationPathIndex = 0;
                 Mode = CharacterMode.PathMovement;
+                Debug.Log(
+                    "Starting NPC on path movement. currentDestinationPathIndex: "
+                        + currentDestinationPathIndex
+                        + " Mode: "
+                        + Mode
+                );
             }
 
             // Start facing our look target, if any
@@ -93,23 +104,11 @@ namespace MyGame.Characters
 
             lastFrameWorldPosition = transform.position;
             lastGroundedPosition = transform.position;
-
-            if (isPlayerControlled)
-            {
-                movementInput.Enable();
-                interactInput.Enable();
-            }
         }
 
         public override void UpdateMovement()
         {
-            if (isPlayerControlled && Mode == CharacterMode.PlayerControlledMovement)
-            {
-                Vector2 input = movementInput.Value;
-
-                ApplyMovement(input);
-            }
-            else if (Mode == CharacterMode.ExternallyControlledMovement)
+            if (Mode == CharacterMode.ExternallyControlledMovement)
             {
                 // Our movement is externally controlled; update our animator
                 // based how quickly we're moving
@@ -152,24 +151,6 @@ namespace MyGame.Characters
             else
             {
                 CurrentSpeedFactor = 0;
-            }
-
-            // If the player falls out of bounds, warp them to the last point
-            // they were on the ground
-            if (isPlayerControlled && Mode == CharacterMode.PlayerControlledMovement)
-            {
-                if (transform.position.y < outOfBoundsYPosition)
-                {
-                    if (characterController != null)
-                    {
-                        transform.position = lastGroundedPosition;
-                    }
-                }
-
-                if (characterController != null && characterController.isGrounded)
-                {
-                    lastGroundedPosition = transform.position;
-                }
             }
 
             if (this.IsAlive)

@@ -1,18 +1,21 @@
 ﻿title: StartHomeroom
 ---
 Casey: Hi class, sorry I'm a bit late. Let's get started with roll call.
-Casey: Mia?
-Mia: Here!
-Casey: Michelle?
-Michelle: Here!
-Casey: Liam?
-Liam: Prrrrresent!
-** giggles **
-Michelle: You're too much, Liam.
-The roll call continues...
+// Casey: Mia?
+// Mia: Here!
+// Casey: Michelle?
+// Michelle: Here!
+// Casey: Liam?
+// Liam: Prrrrresent!
+// ** giggles **
+// Michelle: You're too much, Liam.
+// The roll call continues...
 Casey: Sam?
 ...
 (No Sam again today.)
+Casey: Mariah?
+<<pan_camera PlayerCam 90 0>>
+Sam: Sorry I'm late.
 <<jump EndHomeroom>>
 ===
 
