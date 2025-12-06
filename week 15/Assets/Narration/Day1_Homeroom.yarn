@@ -1,25 +1,51 @@
 ﻿title: StartHomeroom
 ---
+<<fade_in SceneTrigger>>
 Casey: Hi class, sorry I'm a bit late. Let's get started with roll call.
-// Casey: Mia?
-// Mia: Here!
-// Casey: Michelle?
-// Michelle: Here!
-// Casey: Liam?
-// Liam: Prrrrresent!
-// ** giggles **
-// Michelle: You're too much, Liam.
-// The roll call continues...
+Casey: Mia?
+Mia: Here!
+Casey: Michelle?
+Michelle: Here!
+Casey: Liam?
+Liam: Prrrrresent!
+** giggles **
+Michelle: You're too much, Liam.
+The roll call continues...
 Casey: Sam?
 ...
-(No Sam again today.)
-Casey: Mariah?
+Casey: Bella?
 <<pan_camera PlayerCam 90 0>>
 Sam: Sorry I'm late.
-<<jump EndHomeroom>>
+Casey: No worries, Sam. But please see me after class.
+<<pan_camera PlayerCam -90 0>>
+<<move_to Sam -7.4 1 -4.2 true>>
+Liam: Oooh, someone's in trouble!
+Casey: Liam, that's enough. Let's continue with roll call.
+<<change_scene SceneTrigger "Day1_HomeroomEnd">>
 ===
+
+title:AfterHomeroom
+---
+<<fade_in SceneTrigger>>
+Casey: Annnd Tom, I saw you earlier. Alright everyone, go to class.
+Sam: Sorry I was late again, Miss Casey.
+Casey: You've been late a lot recently, Sam. Is everything okay? Don't you live next door?
+Sam: Yeah, I'm a really slow walker.
+Casey: Careful, one more tardy and I'll have to call your parents. Neither of us would be thrilled about that.
+Sam: Yes, Miss Casey.
+Casey: Alright, Sam. I won't hold you any longer.
+<<pan_camera CutsceneCam 90 0>>
+<<move_to Sam 5.8 1 -6.35 true>>
+<<move_to Sam 9 1 2.3>>
+<<pan_camera CutsceneCam -90 0>>
+Casey: (I think my boss wanted me to help him with something. I should go check.)
+<<resume_player_movement Player 2>>
+<<activate_player_camera CameraHolder>>
+===
+
 
 title:EndHomeroom
 ---
 Woohoo, you've reached the end of the demo!
+Check back soon for more!
 ===
