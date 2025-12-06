@@ -215,7 +215,6 @@ namespace MyGame.Characters
                 if (nearest.Interactable != null)
                 {
                     nearest.Interactable.IsCurrent = true;
-                    Debug.Log("Setting isCurrent to true: " + nearest.Interactable.IsCurrent);
                 }
                 currentInteractable = nearest.Interactable;
             }
@@ -236,7 +235,6 @@ namespace MyGame.Characters
                     }
 
                     interactable.IsCurrent = false;
-                    Debug.Log("Setting isCurrent with " + interactable.IsCurrent);
                     currentInteractable = null;
 
                     onInteracting?.Invoke(interactable);

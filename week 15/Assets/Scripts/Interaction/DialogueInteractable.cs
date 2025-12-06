@@ -132,8 +132,6 @@ namespace MyGame.Characters
 
         public override async YarnTask Interact(GameObject interactor)
         {
-            Debug.Log("Starting dialogue interaction");
-            Debug.Log("isCurrent before interaction: " + IsCurrent);
             if (dialogue == null)
             {
                 return;

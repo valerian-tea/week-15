@@ -1,10 +1,14 @@
-using UnityEngine;
+using System.Collections;
 using InventorySystem;
+using UnityEngine;
 
 public class PickUpItem : MonoBehaviour
 {
     // public GameObject ItemOnPlayer;
     public GameObject pickupText;
+
+    // public GameObject acquiredText;
+
     public AddItem addItemScript; // Assign in Inspector
 
     public ItemInitializer itemToAdd; // Assign in Inspector
@@ -32,17 +36,27 @@ public class PickUpItem : MonoBehaviour
                 // Trigger the add logic
                 addItemScript.gameObject.SetActive(true);
 
-                gameObject.SetActive(false);
                 pickupText.SetActive(false);
+                gameObject.SetActive(false);
+
+                // acquiredText.SetActive(true);
+                // StartCoroutine(HideAcquiredTextAfterDelay());
             }
         }
     }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            pickupText.SetActive(false);
-        }
-    }
+    // private IEnumerator HideAcquiredTextAfterDelay()
+    // {
+    //     yield return new WaitForSeconds(2f);
+    //     acquiredText.SetActive(false);
+    //     gameObject.SetActive(false);
+    // }
+
+    // private void OnTriggerExit(Collider other)
+    // {
+    //     if (other.gameObject.CompareTag("Player"))
+    //     {
+    //         pickupText.SetActive(false);
+    //     }
+    // }
 }

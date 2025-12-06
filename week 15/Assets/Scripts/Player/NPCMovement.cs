@@ -56,7 +56,7 @@ namespace MyGame.Characters
         public bool HasPath => followPath != null;
         private int currentDestinationPathIndex = -1;
         private float remainingPathWaitTime = 0f;
-
+        private bool isMovingToPathPoint = false;
         private Quaternion targetRotation;
 
         public float CurrentSpeedFactor = 0f;
@@ -80,7 +80,6 @@ namespace MyGame.Characters
             {
                 var startPoint = followPath.GetWorldPosition(0);
                 var nextPoint = followPath.GetWorldPosition(1);
-                Debug.Log("Start point: " + startPoint + " Next point: " + nextPoint);
 
                 transform.position = startPoint;
                 targetRotation = Quaternion.LookRotation(nextPoint - startPoint);
@@ -108,15 +107,7 @@ namespace MyGame.Characters
 
         public override void UpdateMovement()
         {
-            if (Mode == CharacterMode.ExternallyControlledMovement)
-            {
-                // Our movement is externally controlled; update our animator
-                // based how quickly we're moving
-                var currentSpeed =
-                    (lastFrameWorldPosition - transform.position).magnitude / Time.deltaTime;
-                CurrentSpeedFactor = Mathf.Clamp01(currentSpeed / speed);
-            }
-            else if (Mode == CharacterMode.PathMovement && followPath != null)
+            if (Mode == CharacterMode.PathMovement && followPath != null && isMovingToPathPoint)
             {
                 if (currentDestinationPathIndex == -1 || followPath.Count < 1)
                 {
@@ -131,7 +122,6 @@ namespace MyGame.Characters
                 else
                 {
                     // Move towards current path node
-                    // var nextPath = followPath.GetPositionData(currentDestinationPathIndex);
 
                     var worldOffset =
                         followPath.GetWorldPosition(currentDestinationPathIndex)
@@ -145,12 +135,9 @@ namespace MyGame.Characters
                         currentDestinationPathIndex =
                             (currentDestinationPathIndex + 1) % followPath.Count;
                         remainingPathWaitTime = followPath.GetDelay(currentDestinationPathIndex);
+                        isMovingToPathPoint = false;
                     }
                 }
-            }
-            else
-            {
-                CurrentSpeedFactor = 0;
             }
 
             if (this.IsAlive)
@@ -211,6 +198,14 @@ namespace MyGame.Characters
                 direction = Quaternion.LookRotation(lookDirectionOnSameY);
             }
             return direction;
+        }
+
+        [YarnCommand("move_to")]
+        public YarnTask MoveToYarn(float x, float y, float z, bool wait = false)
+        {
+            var pos = new Vector3(x, y, z);
+            var task = MoveTo(pos, CancellationToken.None);
+            return wait ? task : YarnTask.CompletedTask;
         }
 
         public async YarnTask MoveTo(Vector3 position, CancellationToken cancellationToken)

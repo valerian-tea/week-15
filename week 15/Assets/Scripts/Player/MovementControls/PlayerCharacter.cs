@@ -1,5 +1,6 @@
 // using System.Diagnostics;
 using UnityEngine;
+using Yarn.Unity;
 using Yarn.Unity.Samples;
 
 namespace MyGame.Characters
@@ -7,6 +8,7 @@ namespace MyGame.Characters
     public class PlayerCharacter : BaseCharacter
     {
         Rigidbody rb;
+
         [Header("Movement")]
         public float moveSpeed;
         public Transform orientation;
@@ -32,7 +34,6 @@ namespace MyGame.Characters
             UpdateMovement();
             SetupAnimation();
             UpdateInteraction();
-
         }
 
         private void MyInput()
@@ -42,12 +43,24 @@ namespace MyGame.Characters
         }
 
         public override void UpdateMovement()
-
         {
-            moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+            moveDirection =
+                orientation.forward * verticalInput + orientation.right * horizontalInput;
             rb.AddForce(moveDirection.normalized * moveSpeed * 5f, ForceMode.Force);
             rb.linearDamping = groundDrag;
         }
 
+        [YarnCommand("stop_player_movement")]
+        public void StopPlayerMovement()
+        {
+            this.moveSpeed = 0;
+            // return wait ? task : YarnTask.CompletedTask;
+        }
+
+        [YarnCommand("resume_player_movement")]
+        public void ResumePlayerMovement(float moveSpeed)
+        {
+            this.moveSpeed = moveSpeed;
+        }
     }
 }

@@ -2,6 +2,7 @@
 color: green
 position: -200,200
 ---
+<<fade_in SceneTrigger>>
 (Ugh, where am I?)
 (Must've fallen asleep grading papers again...)
 <<jump Controls>>
@@ -10,7 +11,8 @@ position: -200,200
 title: Controls
 ---
 Welcome to your new job!
-Tip: Press P to pause the game.
+Tip 1: Use WASD or arrow keys to move, and mouse to look around.
+Tip 2: Press P to pause the game and view your inventory.
 ===
 
 title: WarmWelcome
@@ -18,8 +20,9 @@ color: blue
 position: 0,0
 ---
 <<once>>
-Grump: Oh, it's you.
-Grump: Shouldn't you be in class?
+Grump: Oh, it's you. Can you do me a favor?
+-> Casey: Sorry, I need to get to class.
+    Grump: Ah, right. Get on with it then.
 <<else>>
 Grump: Your students are waiting for you.
 <<endonce>>
@@ -30,19 +33,18 @@ color: blue
 position: 200,200
 ---
 <<once>>
-Tweety: Did you hear? She's absent again. 
-Pierrot: I'd be shocked if she graduates.
-Tweety: Seriously. Such a delinquent. Someone like her shouldn't walk with the rest of the students.
-Pierrot: Agreed. Aren't you worried, Miss Casey?
+Tweety: Can you believe it? Looks like she's playing hooky again. 
+Pierrot: I would be shocked if she graduates.
+Tweety: Seriously. Such a truant should not walk with the rest of the students.
+Pierrot: Agreed. Aren't you concerned, Miss Casey?
 -> Casey: She's improving.
-    Pierrot: If I were you, I'd be more worried. I mean, I take my reputation seriously.
-    Tweety: Clearly, not everyone does...
+    Tweety: If I were you, I'd be more concerned. I mean, I take my reputation seriously as a teacher.
+    Pierrot: Clearly, not everyone does.
 -> Casey: Yes, I am.
-    Pierrot: You should be.
+    Tweety: That would be prudent.
 <<else>>
 <<once>>
-Tweety: As much as I'd love to chat, I must go to class.
-Tweety: Shouldn't you be off too, Miss Casey?
+Tweety: As much as I'd love to chat, I must go to class. Shouldn't you be off too, Miss Casey?
 <<else>>
 Tweety: Shouldn't you be off too, Miss Casey?
 <<endonce>>
