@@ -78,6 +78,13 @@ namespace Yarn.Unity.Samples
                         continue;
                     }
 
+                    // because of exit play shenanigans we might be leaving play mode
+                    // easiest way to deal with this is just do a quick null check before continuing
+                    if (chatterGroup == null)
+                    {
+                        return;
+                    }
+
                     if (chatterGroup.IsRunning)
                     {
                         // The chatter group is already running. No need to start it.
@@ -91,8 +98,8 @@ namespace Yarn.Unity.Samples
                     }
 
                     // Start running chatter.
-                    var runTask = chatterGroup.RunChatter();
-
+                    await chatterGroup.RunChatter();
+                    var runTask = chatterGroup.ChatterTask;
                     // Wait until the dialogue is complete, or the player has
                     // left the stop radius.
 
@@ -104,7 +111,7 @@ namespace Yarn.Unity.Samples
                         {
                             // This object was destroyed; interrupt the chatter
                             // and exit.
-                            chatterGroup.Interrupt();
+                            await chatterGroup.Interrupt();
                             return;
                         }
 
@@ -113,7 +120,7 @@ namespace Yarn.Unity.Samples
                             // Only notify a single time, in case it takes time
                             // for the chatter group to finish.
                             hasNotifiedPlayerLeftRadius = true;
-                            chatterGroup.OnPlayerLeftStopRadius();
+                            await chatterGroup.OnPlayerLeftStopRadius();
                         }
                         await YarnTask.Yield();
                     }
@@ -134,7 +141,7 @@ namespace Yarn.Unity.Samples
                 // background chatter
                 if (chatterGroup.IsRunning)
                 {
-                    chatterGroup.Interrupt();
+                    await chatterGroup.Interrupt();
                 }
             }
         }
@@ -146,7 +153,7 @@ namespace Yarn.Unity.Samples
             {
                 if (chatterGroup.interruptedByPrimaryConversation)
                 {
-                    chatterGroup.Interrupt();
+                    chatterGroup.Interrupt().Forget();
                 }
             }
         }

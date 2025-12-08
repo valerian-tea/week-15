@@ -44,6 +44,7 @@ namespace MyGame.Characters
 
         public override void UpdateMovement()
         {
+            // Debug.Log("update movement called with MOVESPPED: " + moveSpeed);
             moveDirection =
                 orientation.forward * verticalInput + orientation.right * horizontalInput;
             rb.AddForce(moveDirection.normalized * moveSpeed * 5f, ForceMode.Force);
@@ -54,7 +55,6 @@ namespace MyGame.Characters
         public void StopPlayerMovement()
         {
             this.moveSpeed = 0;
-            // return wait ? task : YarnTask.CompletedTask;
         }
 
         [YarnCommand("resume_player_movement")]

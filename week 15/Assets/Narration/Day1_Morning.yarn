@@ -3,7 +3,7 @@ color: green
 position: -200,200
 ---
 <<fade_in SceneTrigger>>
-(Ugh, where am I?)
+(Ugh, where am I?)                                                                                                 (Press space to continue.)
 (Must've fallen asleep grading papers again...)
 <<jump Controls>>
 ===
@@ -12,27 +12,24 @@ title: Controls
 ---
 Welcome to your new job!
 Tip 1: Use WASD or arrow keys to move, and mouse to look around.
-Tip 2: Press P to pause the game and view your inventory.
+Tip 2: Press P to pause/unpause the game.
 ===
 
 title: WarmWelcome
 color: blue
 position: 0,0
+when: once
 ---
-<<once>>
 Grump: Oh, it's you. Can you do me a favor?
--> Casey: Sorry, I need to get to class.
-    Grump: Ah, right. Get on with it then.
-<<else>>
-Grump: Your students are waiting for you.
-<<endonce>>
+Casey: Sorry, I need to get to class.
+Grump: Ah, right. Get on with it then.
 ===
 
 title: Gossip
 color: blue
 position: 200,200
+when: once
 ---
-<<once>>
 Tweety: Can you believe it? Looks like she's playing hooky again. 
 Pierrot: I would be shocked if she graduates.
 Tweety: Seriously. Such a truant should not walk with the rest of the students.
@@ -42,11 +39,13 @@ Pierrot: Agreed. Aren't you concerned, Miss Casey?
     Pierrot: Clearly, not everyone does.
 -> Casey: Yes, I am.
     Tweety: That would be prudent.
-<<else>>
-<<once>>
-Tweety: As much as I'd love to chat, I must go to class. Shouldn't you be off too, Miss Casey?
-<<else>>
+Tweety: As much as I'd love to loiter with you, I'm quite busy. 
 Tweety: Shouldn't you be off too, Miss Casey?
-<<endonce>>
-<<endonce>>
+===
+title: Gossip
+color: blue
+position: 400,200
+when: always
+---
+Tweety: Shouldn't you be off to class, Miss Casey?
 ===

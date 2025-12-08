@@ -36,11 +36,6 @@ namespace MyGame.Characters
         [SerializeField]
         float deceleration = 0.1f;
 
-        [Group("Movement")]
-        [ShowIf(nameof(isPlayerControlled))]
-        [SerializeField]
-        float outOfBoundsYPosition = -5;
-
         [HideIf(nameof(isPlayerControlled))]
         [SerializeField]
         float pathDestinationTolerance = 0.1f;

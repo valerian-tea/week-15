@@ -71,6 +71,7 @@ public class SceneTrigger : MonoBehaviour
 
         if (fadeImage == null)
         {
+            Debug.Log("Fade image is null, loading scene directly");
             SceneManager.LoadScene(sceneToLoad);
             yield break;
         }
