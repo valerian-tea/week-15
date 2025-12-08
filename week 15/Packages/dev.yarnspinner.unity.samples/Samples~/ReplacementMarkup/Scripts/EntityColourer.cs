@@ -4,9 +4,9 @@ Yarn Spinner is licensed to you under the terms found in the file LICENSE.md.
 
 using System.Collections.Generic;
 using System.Text;
+using UnityEngine;
 using Yarn.Markup;
 using Yarn.Unity;
-using UnityEngine;
 
 #nullable enable
 
@@ -23,7 +23,7 @@ namespace Yarn.Unity.Samples
     public class EntityColourer : Yarn.Unity.ReplacementMarkupHandler
     {
         public EntityMap[] entities = System.Array.Empty<EntityMap>();
-        public override List<LineParser.MarkupDiagnostic> ProcessReplacementMarker(MarkupAttribute marker, StringBuilder childBuilder, List<MarkupAttribute> childAttributes, string localeCode)
+        public override ReplacementMarkerResult ProcessReplacementMarker(MarkupAttribute marker, StringBuilder childBuilder, List<MarkupAttribute> childAttributes, string localeCode)
         {
             // this works in one of two ways
             // if we have a name string property we use that
@@ -40,16 +40,21 @@ namespace Yarn.Unity.Samples
                 nameText = childBuilder.ToString().ToLower();
             }
 
+            int invisibleCharactersAdded = 0;
+
             foreach (var entity in entities)
             {
                 if (entity.name.ToLower() == nameText)
                 {
-                    childBuilder.Insert(0, $"<color=#{UnityEngine.ColorUtility.ToHtmlStringRGBA(entity.colour)}><b>");
-                    childBuilder.Append("</b></color>");
+                    var prefix = $"<color=#{UnityEngine.ColorUtility.ToHtmlStringRGBA(entity.colour)}><b>";
+                    var suffix = "</b></color>";
+                    childBuilder.Insert(0, prefix);
+                    childBuilder.Append(suffix);
+                    invisibleCharactersAdded += prefix.Length + suffix.Length;
                 }
             }
 
-            return ReplacementMarkupHandler.NoDiagnostics;
+            return new ReplacementMarkerResult(invisibleCharactersAdded);
         }
 
         protected void Start()

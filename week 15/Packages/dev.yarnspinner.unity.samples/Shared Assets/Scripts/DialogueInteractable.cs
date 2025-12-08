@@ -80,6 +80,14 @@ namespace Yarn.Unity.Samples
                         return;
                     }
 
+                    if (dialogueRunner.YarnProject == null)
+                    {
+                        // The dialogue runner has no Yarn Project. We can't ask
+                        // it for saliency info.
+                        onActiveChanged?.Invoke(false);
+                        return;
+                    }
+
                     // TODO: remove this once YS core is updated
                     if (dialogueRunner.Dialogue.ContentSaliencyStrategy == null)
                     {
@@ -105,6 +113,29 @@ namespace Yarn.Unity.Samples
         protected void Awake()
         {
             IsCurrent = false;
+            PrewarmJIT(dialogueRunner);
+        }
+
+        static bool hasPrewarmed;
+        static void PrewarmJIT(DialogueRunner? dialogueRunner)
+        {
+            if (hasPrewarmed)
+            {
+                return;
+            }
+
+            // If we're not using IL2CPP, we can get a framerate hitch the first
+            // time we ask the dialogue system if there's any content, due to
+            // JITing. Pre-warm the JIT by manually exercising a hotspot.
+            if (dialogueRunner != null && dialogueRunner.YarnProject != null && dialogueRunner.YarnProject.Program != null)
+            {
+                // An invalid variable name, but this will cause all necessary
+                // methods to JIT. Yes, this is a hack. If you know of a better
+                // way to pre-warm the JIT in Mono, please contact me at
+                // jon@yarnspinner.dev.
+                dialogueRunner.YarnProject.Program.GetVariableKind("");
+                hasPrewarmed = true;
+            }
         }
 
         public override async YarnTask Interact(GameObject interactor)
@@ -131,11 +162,18 @@ namespace Yarn.Unity.Samples
 
             onInteractionStarted?.Invoke();
 
-            dialogueRunner.StartDialogue(dialogue.nodeName);
+            await dialogueRunner.StartDialogue(dialogue.nodeName);
 
-            if (turnsToInteractor && TryGetComponent<SimpleCharacter>(out var character))
+            if (turnsToInteractor)
             {
-                character.lookTarget = interactor.transform;
+                if (TryGetComponent<SimpleCharacter>(out var character))
+                {
+                    character.lookTarget = interactor.transform;
+                }
+                if (TryGetComponent<SimpleCharacter2D>(out var character2D))
+                {
+                    character2D.lookTarget = interactor.transform;
+                }
             }
 
             var destroyCancellation = destroyCancellationToken;
@@ -147,9 +185,16 @@ namespace Yarn.Unity.Samples
                 return;
             }
 
-            if (turnsToInteractor && TryGetComponent<SimpleCharacter>(out character))
+            if (turnsToInteractor)
             {
-                character.lookTarget = null;
+                if (TryGetComponent<SimpleCharacter>(out var character))
+                {
+                    character.lookTarget = null;
+                }
+                if (TryGetComponent<SimpleCharacter2D>(out var character2D))
+                {
+                    character2D.lookTarget = null;
+                }
             }
         }
     }

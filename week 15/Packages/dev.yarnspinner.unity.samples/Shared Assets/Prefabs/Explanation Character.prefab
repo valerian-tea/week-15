@@ -121,7 +121,7 @@ PrefabInstance:
     - target: {fileID: 3255585012628313904, guid: 0b3eff3c7e4554fa9beeeed968894f36, type: 3}
       propertyPath: dialogue.project
       value: 
-      objectReference: {fileID: 7545569452688597077, guid: 316fedb72e8c041a49a0f1db3eb267d5, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 3255585012628313904, guid: 0b3eff3c7e4554fa9beeeed968894f36, type: 3}
       propertyPath: dialogue.nodeName
       value: 
@@ -170,8 +170,7 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 1178724524516069593, guid: 0b3eff3c7e4554fa9beeeed968894f36, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 4276094191865241981, guid: 0b3eff3c7e4554fa9beeeed968894f36, type: 3}

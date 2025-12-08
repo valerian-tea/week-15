@@ -51,7 +51,6 @@ CharacterController:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -114,6 +113,7 @@ MonoBehaviour:
   blinkTriggerName: Blink
   cycleOffsetParameter: Cycle Offset
   aliveParameter: Alive
+  baseLayer: Base Layer
   interactionRadius: 1
   offset: {x: 0, y: 0, z: 0.3}
   onInteracting:
@@ -215,6 +215,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -289,7 +292,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -3888594990679166489, guid: 341fc1c944fca4131b870669db973867, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: -876546973899608171, guid: 5567eed9a7faf420e9c55bf53168c140, type: 3}
     - target: {fileID: 919132149155446097, guid: 341fc1c944fca4131b870669db973867, type: 3}

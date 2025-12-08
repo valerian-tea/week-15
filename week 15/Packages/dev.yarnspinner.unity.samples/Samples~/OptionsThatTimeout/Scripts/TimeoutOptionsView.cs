@@ -108,7 +108,7 @@ namespace Yarn.Unity.Samples
         /// <remarks>This view does not display lines directly, but instead
         /// stores lines so that when options are run, the last line that ran
         /// before the options appeared can be shown.</remarks>
-        /// <inheritdoc cref="AsyncDialogueViewBase.RunLineAsync"
+        /// <inheritdoc cref="DialoguePresenterBase.RunLineAsync"
         /// path="/param"/>
         /// <returns>A completed task.</returns>
         public override YarnTask RunLineAsync(LocalizedLine line, LineCancellationToken token)
@@ -127,11 +127,8 @@ namespace Yarn.Unity.Samples
             }
 
             await timedBar.Shrink(autoSelectDuration, cancellationToken);
-
-            if (!cancellationToken.IsCancellationRequested)
-            {
-                selectedOptionCompletionSource.TrySetResult(option);
-            }
+            
+            selectedOptionCompletionSource.TrySetResult(option);
         }
 
         // this handles the situation for the last highlighted option is selected
@@ -148,17 +145,13 @@ namespace Yarn.Unity.Samples
             await timedBar.Shrink(autoSelectDuration, cancellationToken);
 
             bool foundIt = false;
-
-            if (!cancellationToken.IsCancellationRequested)
+            foreach (var option in options)
             {
-                foreach (var option in options)
+                if (option.IsHighlighted)
                 {
-                    if (option.IsHighlighted)
-                    {
-                        foundIt = true;
-                        selectedOptionCompletionSource.TrySetResult(option.Option);
-                        break;
-                    }
+                    foundIt = true;
+                    selectedOptionCompletionSource.TrySetResult(option.Option);
+                    break;
                 }
             }
 
@@ -178,11 +171,11 @@ namespace Yarn.Unity.Samples
         /// Called by a <see cref="DialogueRunner"/> to display a collection of
         /// options to the user. 
         /// </summary>
-        /// <inheritdoc cref="AsyncDialogueViewBase.RunOptionsAsync"
+        /// <inheritdoc cref="DialoguePresenterBase.RunOptionsAsync"
         /// path="/param"/>
-        /// <inheritdoc cref="AsyncDialogueViewBase.RunOptionsAsync"
+        /// <inheritdoc cref="DialoguePresenterBase.RunOptionsAsync"
         /// path="/returns"/>
-        public override async YarnTask<DialogueOption?> RunOptionsAsync(DialogueOption[] dialogueOptions, CancellationToken cancellationToken)
+        public override async YarnTask<DialogueOption?> RunOptionsAsync(DialogueOption[] dialogueOptions, LineCancellationToken cancellationToken)
         {
             int hasDefault = 0;
             TimeOutOptionType defaultOptionType = TimeOutOptionType.None;
@@ -307,13 +300,13 @@ namespace Yarn.Unity.Samples
             // A cancellation token source that becomes cancelled when any
             // option item is selected, or when this entire option view is
             // cancelled
-            var completionCancellationSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            var completionCancellationSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken.HurryUpToken);
 
             async YarnTask CancelSourceWhenDialogueCancelled()
             {
                 await YarnTask.WaitUntilCanceled(completionCancellationSource.Token);
 
-                if (cancellationToken.IsCancellationRequested == true)
+                if (cancellationToken.NextContentToken.IsCancellationRequested == true)
                 {
                     // The overall cancellation token was fired, not just our
                     // internal 'something was selected' cancellation token.
@@ -423,7 +416,7 @@ namespace Yarn.Unity.Samples
             if (canvasGroup != null)
             {
                 // fade up the UI now
-                await Effects.FadeAlphaAsync(canvasGroup, 0, 1, fadeUpDuration, cancellationToken);
+                await Effects.FadeAlphaAsync(canvasGroup, 0, 1, fadeUpDuration, cancellationToken.HurryUpToken);
             }
 
             // allow interactivity and wait for an option to be selected
@@ -469,9 +462,8 @@ namespace Yarn.Unity.Samples
 
             if (canvasGroup != null)
             {
-
                 // fade down
-                await Effects.FadeAlphaAsync(canvasGroup, 1, 0, fadeDownDuration, cancellationToken);
+                await Effects.FadeAlphaAsync(canvasGroup, 1, 0, fadeDownDuration, cancellationToken.HurryUpToken);
             }
 
             // disabling ALL the options views now
@@ -482,7 +474,7 @@ namespace Yarn.Unity.Samples
             await YarnTask.Yield();
 
             // if we are cancelled we still need to return but we don't want to have a selection, so we return no selected option
-            if (cancellationToken.IsCancellationRequested)
+            if (cancellationToken.NextContentToken.IsCancellationRequested)
             {
                 return await DialogueRunner.NoOptionSelected;
             }

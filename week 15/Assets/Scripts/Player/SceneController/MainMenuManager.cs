@@ -13,8 +13,6 @@ public class MainMenuManager : MonoBehaviour
 
     public void QuitGame()
     {
-        Application.Quit(); // Exits the application
+        Application.Quit();
     }
-
-    // Add other functions for options, etc. as needed
 }

@@ -1,11 +1,11 @@
 {
   "name": "dev.yarnspinner.unity.samples",
-  "version": "3.0.3",
+  "version": "3.1.0",
   "displayName": "Yarn Spinner Samples",
   "description": "Example scenes and tutorial content for Yarn Spinner. To install the samples, click on the Samples tab in the Package Manager window.",
   "unity": "2022.3",
   "dependencies": {
-    "dev.yarnspinner.unity": "3.0.3",
+    "dev.yarnspinner.unity": "3.1.0",
     "com.unity.shadergraph": "14.0.0"
   },
   "keywords": [
@@ -66,6 +66,11 @@
       "displayName": "Replacement Markup",
       "description": "Demonstrates the use of Replacement Markup to insert text styling or dynamic content into dialogue lines as they are presented",
       "path": "Samples~/ReplacementMarkup"
+    },
+    {
+      "displayName": "Node Internals",
+      "description": "Demonstrates how to explore the internals of Yarn Spinner nodes to get information not otherwise exposed",
+      "path": "Samples~/NodeInternals"
     },
     {
       "displayName": "Basic Saliency and Storylets",

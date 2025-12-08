@@ -1,6 +1,5 @@
 #nullable enable
 using Yarn.Unity;
-using Yarn.Unity.Samples;
 
 namespace MyGame.Characters
 {
@@ -93,6 +92,16 @@ namespace MyGame.Characters
                     {
                         // We have no dialogue runner, so we can't be interacted with.
                         onActiveChanged?.Invoke(false);
+
+                        return;
+                    }
+
+                    if (dialogueRunner.YarnProject == null)
+                    {
+                        // The dialogue runner has no Yarn Project. We can't ask
+                        // it for saliency info.
+                        onActiveChanged?.Invoke(false);
+
                         return;
                     }
 
@@ -110,12 +119,9 @@ namespace MyGame.Characters
                         runnableContent
                     );
 
-                    if (content == null || runnableContent == null)
+                    if (content == null)
                     {
                         // We have no content we can run. Don't show the indicator.
-                        Debug.Log(
-                            $"DialogueInteractable: no runnable content for dialogue {dialogue.nodeName}"
-                        );
                         onActiveChanged?.Invoke(false);
                         return;
                     }
@@ -128,6 +134,34 @@ namespace MyGame.Characters
         protected void Awake()
         {
             IsCurrent = false;
+            PrewarmJIT(dialogueRunner);
+        }
+
+        static bool hasPrewarmed;
+
+        static void PrewarmJIT(DialogueRunner? dialogueRunner)
+        {
+            if (hasPrewarmed)
+            {
+                return;
+            }
+
+            // If we're not using IL2CPP, we can get a framerate hitch the first
+            // time we ask the dialogue system if there's any content, due to
+            // JITing. Pre-warm the JIT by manually exercising a hotspot.
+            if (
+                dialogueRunner != null
+                && dialogueRunner.YarnProject != null
+                && dialogueRunner.YarnProject.Program != null
+            )
+            {
+                // An invalid variable name, but this will cause all necessary
+                // methods to JIT. Yes, this is a hack. If you know of a better
+                // way to pre-warm the JIT in Mono, please contact me at
+                // jon@yarnspinner.dev.
+                dialogueRunner.YarnProject.Program.GetVariableKind("");
+                hasPrewarmed = true;
+            }
         }
 
         public override async YarnTask Interact(GameObject interactor)
@@ -156,61 +190,34 @@ namespace MyGame.Characters
 
             onInteractionStarted?.Invoke();
 
-            Debug.Log("isCurrent just b4 interaction: " + IsCurrent);
+            await dialogueRunner.StartDialogue(dialogue.nodeName);
 
-            dialogueRunner.StartDialogue(dialogue.nodeName);
-
-            Debug.Log("isCurrent just after interaction: " + IsCurrent);
-
-            if (turnsToInteractor && TryGetComponent<BaseCharacter>(out var character))
+            if (turnsToInteractor)
             {
-                character.lookTarget = interactor.transform;
+                if (TryGetComponent<BaseCharacter>(out var character))
+                {
+                    character.lookTarget = interactor.transform;
+                }
             }
 
             var destroyCancellation = destroyCancellationToken;
 
             await dialogueRunner.DialogueTask;
 
-            Debug.Log("isCurrent before refresh: " + IsCurrent);
-            RefreshAvailability();
-            Debug.Log("isCurrent after refresh: " + IsCurrent);
-
             if (destroyCancellation.IsCancellationRequested)
             {
                 return;
             }
 
-            if (turnsToInteractor && TryGetComponent<BaseCharacter>(out character))
+            if (turnsToInteractor)
             {
-                character.lookTarget = null;
-            }
-        }
-
-        private void RefreshAvailability()
-        {
-            if (dialogueRunner == null || dialogue == null)
-            {
-                IsCurrent = false;
-                return;
+                if (TryGetComponent<BaseCharacter>(out var character))
+                {
+                    character.lookTarget = null;
+                }
             }
 
-            IsCurrent = false;
-
-            var options = dialogueRunner.Dialogue.GetSaliencyOptionsForNodeGroup(dialogue.nodeName);
-            var content = dialogueRunner.Dialogue.ContentSaliencyStrategy.QueryBestContent(options);
-            Debug.Log("Options count: " + options);
-            Debug.Log("Refreshed content: " + content);
-            if (content == null)
-            {
-                // Yarn says: “this node has no runnable content” → disable interaction
-                IsCurrent = false;
-                onActiveChanged?.Invoke(false);
-            }
-            else
-            {
-                // Still has content — allow future interactions
-                IsCurrent = false;
-            }
+            onInteractionEnded?.Invoke();
         }
     }
 }

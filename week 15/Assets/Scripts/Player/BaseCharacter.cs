@@ -56,9 +56,6 @@ namespace MyGame.Characters
         string facialExpressionsLayer = "Face";
         private int facialExpressionsLayerID = 0;
 
-        [SerializeField]
-        Texture2D? deathMouthTexture;
-
         [Group("Animation")]
         [Header("Blinking")]
         [SerializeField]
@@ -74,21 +71,6 @@ namespace MyGame.Characters
         private string speedParameter = "Speed";
 
         [Group("Animation Parameters", true)]
-        [AnimationParameter(nameof(animator), AnimatorControllerParameterType.Float)]
-        [SerializeField]
-        private string sideTiltParameter = "Side Tilt";
-
-        [Group("Animation Parameters", true)]
-        [AnimationParameter(nameof(animator), AnimatorControllerParameterType.Float)]
-        [SerializeField]
-        private string forwardTiltParameter = "Forward Tilt";
-
-        [Group("Animation Parameters", true)]
-        [AnimationParameter(nameof(animator), AnimatorControllerParameterType.Float)]
-        [SerializeField]
-        private string turnParameter = "Turn";
-
-        [Group("Animation Parameters", true)]
         [AnimationParameter(nameof(animator), AnimatorControllerParameterType.Trigger)]
         [SerializeField]
         string blinkTriggerName = "Blink";
@@ -97,11 +79,6 @@ namespace MyGame.Characters
         [AnimationParameter(nameof(animator), AnimatorControllerParameterType.Float)]
         [SerializeField]
         string cycleOffsetParameter = "Cycle Offset";
-
-        [Group("Animation Parameters", true)]
-        [AnimationParameter(nameof(animator), AnimatorControllerParameterType.Bool)]
-        [SerializeField]
-        string aliveParameter = "Alive";
 
         [Group("Animation Parameters")]
         [AnimationLayer(nameof(animator))]
@@ -306,45 +283,6 @@ namespace MyGame.Characters
             animator.SetFloat(speedParameter, CurrentSpeedFactor);
         }
 
-        protected async YarnTask TweenAnimationParameter(
-            string animationParameter,
-            float to,
-            float duration,
-            System.Func<float, float> easingFunction,
-            CancellationToken cancellationToken
-        )
-        {
-            if (animator == null)
-            {
-                return;
-            }
-
-            var hash = Animator.StringToHash(animationParameter);
-            var currentValue = animator.GetFloat(hash);
-
-            // If a tween was already running for this parameter, cancel it now
-            if (activeAnimationLerps.TryGetValue(hash, out var cancellationTokenSource))
-            {
-                cancellationTokenSource.Cancel();
-            }
-
-            // Create and store a cancellation token source for this animation
-            var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-            activeAnimationLerps[hash] = cts;
-
-            // Run the tween
-            await Tweening.TweenValue(
-                currentValue,
-                to,
-                duration,
-                easingFunction,
-                value => animator.SetFloat(hash, value),
-                cts.Token
-            );
-
-            // Clean up
-            activeAnimationLerps.Remove(hash);
-        }
         #endregion
     }
 }
