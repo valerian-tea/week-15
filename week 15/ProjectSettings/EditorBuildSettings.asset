@@ -9,13 +9,13 @@ EditorBuildSettings:
     path: Assets/Scenes/Screens/TitleScreen.unity
     guid: eeac28acb18544dc39ffd30be775190b
   - enabled: 1
-    path: Assets/Scenes/Day1/Day1_School.unity
+    path: Assets/Scenes/Day1/Day/Day1_School.unity
     guid: ff2c0db8dcb1d4c148c79566506334e0
   - enabled: 1
-    path: Assets/Scenes/Day1/Day1_HomeroomStart.unity
+    path: Assets/Scenes/Day1/Day/Day1_HomeroomStart.unity
     guid: cc6c4d0f533064f268795c97db962c84
   - enabled: 1
-    path: Assets/Scenes/Day1/Day1_HomeroomEnd.unity
+    path: Assets/Scenes/Day1/Day/Day1_HomeroomEnd.unity
     guid: 15422a66ebdb54707b0e5dde670c278e
   - enabled: 1
     path: Assets/Scenes/Screens/EndScreen.unity
