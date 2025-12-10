@@ -4,11 +4,10 @@ namespace Yarn.Unity.Samples
 {
     using System.Collections.Generic;
     using System.Text;
-    using UnityEngine;
-    using Yarn.Unity;
     using TMPro;
+    using UnityEngine;
     using Yarn.Markup;
-
+    using Yarn.Unity;
 #if UNITY_EDITOR
     using UnityEditor;
 #endif
@@ -18,13 +17,15 @@ namespace Yarn.Unity.Samples
 
     public class LinkMarkupHandler : ReplacementMarkupHandler
     {
-        [SerializeField] private TextMeshProUGUI? text;
-        [SerializeField] private DialogueRunner? runner;
+        [SerializeField]
+        private TextMeshProUGUI? text;
+
+        [SerializeField]
+        private DialogueRunner? runner;
 
         private int yarnLinkIndex = 0;
         private Dictionary<string, (string, bool)> paths = new Dictionary<string, (string, bool)>();
 
-#if UNITY_EDITOR
         void Awake()
         {
             if (runner != null)
@@ -33,12 +34,23 @@ namespace Yarn.Unity.Samples
             }
         }
 
-        public override ReplacementMarkerResult ProcessReplacementMarker(MarkupAttribute marker, StringBuilder childBuilder, List<MarkupAttribute> childAttributes, string localeCode)
+        public override ReplacementMarkerResult ProcessReplacementMarker(
+            MarkupAttribute marker,
+            StringBuilder childBuilder,
+            List<MarkupAttribute> childAttributes,
+            string localeCode
+        )
         {
             string? value;
             if (!marker.TryGetProperty("link", out value))
             {
-                return new ReplacementMarkerResult(new List<LineParser.MarkupDiagnostic>() { new LineParser.MarkupDiagnostic("The link markup has no path!") }, 0);
+                return new ReplacementMarkerResult(
+                    new List<LineParser.MarkupDiagnostic>()
+                    {
+                        new LineParser.MarkupDiagnostic("The link markup has no path!"),
+                    },
+                    0
+                );
             }
 
             bool external = false;
@@ -47,11 +59,19 @@ namespace Yarn.Unity.Samples
             // if it's an internal path we should verify it is valid
             if (!external)
             {
+#if UNITY_EDITOR
                 var path = AssetDatabase.GUIDToAssetPath(value);
                 if (string.IsNullOrEmpty(path))
                 {
-                    return new ReplacementMarkerResult(new List<LineParser.MarkupDiagnostic>() { new LineParser.MarkupDiagnostic("The link guid is invalid") }, 0);
+                    return new ReplacementMarkerResult(
+                        new List<LineParser.MarkupDiagnostic>()
+                        {
+                            new LineParser.MarkupDiagnostic("The link guid is invalid"),
+                        },
+                        0
+                    );
                 }
+#endif
             }
 
             var originalLength = childBuilder.Length;
@@ -67,6 +87,7 @@ namespace Yarn.Unity.Samples
             return new ReplacementMarkerResult(childBuilder.Length - originalLength);
         }
 
+#if UNITY_EDITOR
         void Update()
         {
             var mousePressed = false;
@@ -76,8 +97,8 @@ namespace Yarn.Unity.Samples
             mousePressed = Mouse.current.leftButton.wasReleasedThisFrame;
             mousePosition = Mouse.current.position.value;
 #else
-        mousePressed = Input.GetMouseButtonDown(0);
-        mousePosition = Input.mousePosition;
+            mousePressed = Input.GetMouseButtonDown(0);
+            mousePosition = Input.mousePosition;
 #endif
 
             if (mousePressed)

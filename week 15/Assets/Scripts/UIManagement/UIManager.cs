@@ -3,7 +3,7 @@ using UnityEngine;
 public class UIManager : MonoBehaviour
 {
     public GameObject[] panels;
-    public static bool isInventoryOpen { get; private set; }
+    public static bool isPaused { get; private set; }
 
     private GameObject GetPanelByName(string panelName)
     {
@@ -28,17 +28,15 @@ public class UIManager : MonoBehaviour
                 cg.alpha = 0f;
                 cg.interactable = false;
                 cg.blocksRaycasts = false;
-                isInventoryOpen = false;
+                isPaused = false;
             }
             else // Show inventory
             {
                 cg.alpha = 1f;
                 cg.interactable = true;
                 cg.blocksRaycasts = true;
-                isInventoryOpen = true;
+                isPaused = true;
             }
-
-            Time.timeScale = (cg.alpha == 1f) ? 0f : 1f;
         }
     }
 

@@ -244,6 +244,12 @@ namespace MyGame.Characters
             this.CurrentSpeedFactor = 0;
         }
 
+        [YarnCommand("disable_character")]
+        public void DisableNPC()
+        {
+            this.gameObject.SetActive(false);
+        }
+
         public void SetLookDirection(Quaternion rotation, bool immediate = false)
         {
             targetRotation = rotation;
