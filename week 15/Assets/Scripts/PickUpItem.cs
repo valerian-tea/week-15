@@ -9,7 +9,8 @@ public class PickUpItem : MonoBehaviour
 
     // public GameObject acquiredText;
 
-    public AddItem addItemScript; // Assign in Inspector
+    // public AddItem addItemScript; // Assign in Inspector
+    private AddItem addItemScript;
 
     public ItemInitializer itemToAdd; // Assign in Inspector
     public InventoryInitializer inventory; // Assign in Inspector
@@ -18,6 +19,8 @@ public class PickUpItem : MonoBehaviour
     void Start()
     {
         pickupText.SetActive(false);
+        addItemScript = FindFirstObjectByType<AddItem>();
+
         // ItemOnPlayer.SetActive(false);
     }
 

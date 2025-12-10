@@ -18,6 +18,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Day1/Day/Day1_HomeroomEnd.unity
     guid: 15422a66ebdb54707b0e5dde670c278e
   - enabled: 1
+    path: Assets/Scenes/Day1/Night/Day1_Night.unity
+    guid: 14aeb790f27af4d0cacdffbc7c658a1e
+  - enabled: 1
     path: Assets/Scenes/Screens/EndScreen.unity
     guid: ff1bd5cf4273448bdb58bd480ae918af
   m_configObjects: {}

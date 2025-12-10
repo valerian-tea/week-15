@@ -2,9 +2,10 @@
 color: green
 position: -200,200
 ---
-<<fade_in SceneTrigger>>
+<<fade_in SceneLoader>>
 (Ugh, where am I?)                                                                                                 (Press space to continue.)
 (Must've fallen asleep grading papers again...)
+<<declare $grumpVisited = false>>
 <<jump Controls>>
 ===
 
@@ -23,6 +24,7 @@ when: once
 Grump: Oh, it's you. Can you do me a favor?
 Casey: Sorry, I need to get to class.
 Grump: Ah, right. Get on with it then.
+<<set $grumpVisited to true>>
 ===
 
 title: Gossip
@@ -47,5 +49,49 @@ color: blue
 position: 400,200
 when: always
 ---
-Tweety: Shouldn't you be off to class, Miss Casey?
+Tweety: Shouldn't you be off to homeroom period, Miss Casey?
+===
+
+// Homeroom Scene
+
+title:AfterHomeroom
+---
+<<fade_in SceneLoader>>
+Casey: Annnd Tom, I saw you earlier. Alright everyone, go to class.
+Sam: Sorry I was late again, Miss Casey.
+Casey: You've been late a lot recently, Sam. Is everything okay? Don't you live next door?
+Sam: Yeah, I'm a really slow walker.
+Casey: Careful, one more tardy and I'll have to call your parents. Neither of us would be thrilled about that.
+Sam: Yes, Miss Casey.
+Casey: Alright, Sam. I won't hold you any longer.
+<<pan_camera CutsceneCam 90 0>>
+<<move_to Sam 5.8 1 -6.35 true>>
+<<move_to Sam 9 1 2.3>>
+<<disable_character Sam>>
+<<pan_camera CutsceneCam -90 0>>
+<<if $grumpVisited == true>>
+    Casey: (I think that old grump wanted me to help him with something. I should go check.)
+    <<else>>
+    Casey: (Gerry looked preoccupied. I should see if he needs anything.)
+<<endif>>
+<<resume_player_movement Player 2>>
+<<activate_player_camera CameraHolder>> 
+===
+
+title:GrumpyRequest
+when: once
+---
+<<if $grumpVisited == true>>
+    Casey: Hey Gerry, what were you asking before?
+    <<else>>
+    Casey: Hey Gerry, you alright?
+<<endif>>
+Grump: Oh...yes. Can you see to those file cabinets in the teacher's lounge, they are an absolute mess. Please organize them.
+Casey: Sure thing.
+===
+title:GrumpyRequest
+when: always
+---
+Grump: Time waits for no one.
+Grump: Neither will those file cabinets in the teacher's lounge. Get to it!
 ===

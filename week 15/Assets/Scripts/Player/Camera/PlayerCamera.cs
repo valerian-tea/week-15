@@ -11,7 +11,7 @@ public class PlayerCamera : MonoBehaviour
 
     void Update()
     {
-        if (UIManager.isInventoryOpen)
+        if (UIManager.isPaused)
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
